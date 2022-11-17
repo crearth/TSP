@@ -1,5 +1,3 @@
-package be.KULeuven;
-
 import java.util.Collection;
 
 public interface GraphInterface {
