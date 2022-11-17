@@ -1,3 +1,5 @@
+package tsp;
+
 import java.util.Collection;
 
 public interface GraphInterface {

@@ -1,3 +1,5 @@
+package tsp;
+
 import java.util.List;
 
 public class Tour implements TourInterface {
