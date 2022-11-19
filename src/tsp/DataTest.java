@@ -19,11 +19,6 @@ public class DataTest {
     }
 
     @Test
-    public void testGetFile() {
-        assertEquals(berlin.getFile(), new File("../data/berlin52.tsp"));
-    }
-
-    @Test
     public void testReadFile() {
         assertEquals(berlin.name, "berlin52");
         assertEquals(berlin.type, "TSP");

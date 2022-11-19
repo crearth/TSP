@@ -6,47 +6,80 @@ import java.util.*;
 
 public class Data {
 
+    /**
+     * The name of the file, excluding the .tsp extension.
+     */
     private final String filename;
-    private final File file;
-    private final ArrayList<String> content;
+    /**
+     * The file object.
+     */
+    private File file;
+    /**
+     * An ArrayList that contains all the content of the file.
+     */
+    private ArrayList<String> content;
+    /**
+     * The name of the problem.
+     */
     public String name = null;
+    /**
+     * The type of the problem. In this case this will always be TSP.
+     */
     public String type = null;
+    /**
+     * The dimension (number of vertices) of the problem.
+     */
     public int dimension = 0;
+    /**
+     * The type of edge weights.
+     */
     public String edgeWeightType = null;
+    /**
+     * The data points in x,y coordinates and with a number.
+     */
     public HashMap<Integer, ArrayList<Double>> dataPoints = new HashMap<>();
+    /**
+     * A matrix with the distances between vertices i and j.
+     */
+    public int[][] distanceMatrix;
 
 
     public Data(String tspProblem) throws FileNotFoundException {
         filename = tspProblem;
-        file = getFile();
-        content = transform();
+        setFile();
+        setContent();
         readSpecification();
-        parse();
+        distanceMatrix = parse();
+    }
+
+    public HashMap<Integer, ArrayList<Double>> getDataPoints() {
+        return dataPoints;
+    }
+
+    public int getDimension() {
+        return dimension;
     }
 
     /**
-     * get the file from the data folder with the given name
-     * @return file
+     * set the file from the data folder with the given name
      */
-    public File getFile() {
+    public void setFile() {
         String fullFilename = "data/" + filename + ".tsp";
-        File file = new File(fullFilename);
-        return file;
+        file = new File(fullFilename);
     }
 
     /**
      * parse the file to an ArrayList with a new element for each line
-     * @return fileContent
      * @throws FileNotFoundException if the file is not found
      */
-    public ArrayList<String> transform() throws FileNotFoundException {
+    public void setContent() throws FileNotFoundException {
         Scanner reader = new Scanner(file);
         ArrayList<String> fileContent = new ArrayList<String>();
         while (reader.hasNextLine()) {
             fileContent.add(reader.nextLine());
         }
         reader.close();
-        return fileContent;
+        content = fileContent;
     }
 
     /**
@@ -63,7 +96,7 @@ public class Data {
      * get the data points for the EUC_2D problem
      * @return dataPoints
      */
-    public HashMap<Integer, ArrayList<Double>> getDataPoints() {
+    public HashMap<Integer, ArrayList<Double>> parseDataPoints() {
         List<String> data = content.subList(6, content.size());
         for (String i : data) {
             if (!i.equals("EOF")) {
@@ -85,20 +118,53 @@ public class Data {
     }
 
     public int[][] parse() {
-        int[][] distanceMatrix = new int[dimension-1][dimension-1];
+        int[][] distanceMatrix = switch (edgeWeightType) {
+            case "EUC_2D" -> parseEUC2D();
+            case "GEO" -> parseGEO();
+            case "ATT" -> parseATT();
+            default -> new int[dimension - 1][dimension - 1];
+        };
+        System.out.println(Arrays.deepToString(distanceMatrix));
+        return distanceMatrix;
+    }
 
-        if (edgeWeightType.equals("EUC_2D")) {
-            dataPoints = getDataPoints();
-            for (int i = 1; i < dimension; i++) {
-                for (int j = 1; j < dimension; j++) {
-                    double xd = dataPoints.get(i).get(0) - dataPoints.get(j).get(0);
-                    double yd = dataPoints.get(i).get(1) - dataPoints.get(j).get(1);
-                    int dij = (int) Math.round(Math.sqrt(xd*xd + yd*yd));
-                    distanceMatrix[i-1][j-1] = dij;
-                }
+    public int[][] parseEUC2D() {
+        int[][] distanceMatrix = new int[dimension-1][dimension-1];
+        dataPoints = parseDataPoints();
+        for (int i = 1; i < dimension; i++) {
+            for (int j = 1; j < dimension; j++) {
+                double xd = dataPoints.get(i).get(0) - dataPoints.get(j).get(0);
+                double yd = dataPoints.get(i).get(1) - dataPoints.get(j).get(1);
+                int dij = (int) Math.round(Math.sqrt(xd*xd + yd*yd));
+                distanceMatrix[i-1][j-1] = dij;
             }
         }
-        System.out.println(Arrays.deepToString(distanceMatrix));
+        return distanceMatrix;
+    }
+
+    public int[][] parseGEO() {
+        int[][] distanceMatrix = new int[dimension-1][dimension-1];
+        return distanceMatrix;
+    }
+
+    public int[][] parseATT() {
+        int[][] distanceMatrix = new int[dimension-1][dimension-1];
+        dataPoints = parseDataPoints();
+        for (int i = 1; i < dimension; i++) {
+            for (int j = 1; j < dimension; j++) {
+                double xd = dataPoints.get(i).get(0) - dataPoints.get(j).get(0);
+                double yd = dataPoints.get(i).get(1) - dataPoints.get(j).get(1);
+                double rij = Math.sqrt((xd*xd + yd*yd) / 10.0);
+                int tij = (int) Math.round(rij);
+                int dij = 0;
+                if (tij < rij) {
+                    dij = tij + 1;
+                } else {
+                    dij = tij;
+                }
+                distanceMatrix[i-1][j-1] = dij;
+            }
+        }
         return distanceMatrix;
     }
 
@@ -107,7 +173,7 @@ public class Data {
 
         Data bier = new Data("bier127");
 
-        //Data lin = new Data("lin318");
+        Data att = new Data("att48");
 
         //Data brazil = new Data("brazil58");
     }
