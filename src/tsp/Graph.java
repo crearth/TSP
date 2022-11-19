@@ -4,13 +4,11 @@ import java.io.FileNotFoundException;
 import java.util.Collection;
 
 public class Graph implements GraphInterface{
-    private Data data;
 
-    private int numberOfVertices;
+    private final int numberOfVertices;
 
     public Graph(String tspProblem) throws FileNotFoundException {
-        data = new Data(tspProblem);
-
+        Data data = new Data(tspProblem);
         numberOfVertices = data.getDimension();
     }
     @Override

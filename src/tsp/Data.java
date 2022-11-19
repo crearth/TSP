@@ -128,6 +128,10 @@ public class Data {
         return distanceMatrix;
     }
 
+    /**
+     * EUC_2D-parser
+     * @return a matrix with the distances from and to all vertices
+     */
     public int[][] parseEUC2D() {
         int[][] distanceMatrix = new int[dimension-1][dimension-1];
         dataPoints = parseDataPoints(6);
@@ -142,6 +146,10 @@ public class Data {
         return distanceMatrix;
     }
 
+    /**
+     * GEO-parser
+     * @return a matrix with the distances from and to all vertices
+     */
     public int[][] parseGEO() {
         int[][] distanceMatrix = new int[dimension-1][dimension-1];
         dataPoints = parseDataPoints(8);
@@ -160,17 +168,10 @@ public class Data {
         return distanceMatrix;
     }
 
-    private double[] calculateCoordinates(double x, double y) {
-        double[] coordinates = new double[2];
-        int deg = (int) Math.round(x);
-        double min = x - deg;
-        coordinates[0] = Math.PI * (deg + 5.0 * min / 3.0) / 180.0;
-        deg = (int) Math.round(y);
-        min = y - deg;
-        coordinates[1] = Math.PI * (deg + 5.0 * min / 3.0) / 180.0;
-        return coordinates;
-    }
-
+    /**
+     * ATT-parser
+     * @return a matrix with the distances from and to all vertices
+     */
     public int[][] parseATT() {
         int[][] distanceMatrix = new int[dimension-1][dimension-1];
         dataPoints = parseDataPoints(6);
@@ -190,6 +191,23 @@ public class Data {
             }
         }
         return distanceMatrix;
+    }
+
+    /**
+     * Help function to calculate the longitude and latitude for the GEO-parser
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @return a list of two elements, the longitude and the latitude
+     */
+    private double[] calculateCoordinates(double x, double y) {
+        double[] coordinates = new double[2];
+        int deg = (int) Math.round(x);
+        double min = x - deg;
+        coordinates[0] = Math.PI * (deg + 5.0 * min / 3.0) / 180.0;
+        deg = (int) Math.round(y);
+        min = y - deg;
+        coordinates[1] = Math.PI * (deg + 5.0 * min / 3.0) / 180.0;
+        return coordinates;
     }
 
     public static void main(String[] args) throws FileNotFoundException {
