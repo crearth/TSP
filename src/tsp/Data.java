@@ -96,8 +96,8 @@ public class Data {
      * get the data points for the EUC_2D problem
      * @return dataPoints
      */
-    public HashMap<Integer, ArrayList<Double>> parseDataPoints() {
-        List<String> data = content.subList(6, content.size());
+    public HashMap<Integer, ArrayList<Double>> parseDataPoints(int start) {
+        List<String> data = content.subList(start, content.size());
         for (String i : data) {
             if (!i.equals("EOF")) {
                 // trim to remove whitespaces before and after line content
@@ -130,7 +130,7 @@ public class Data {
 
     public int[][] parseEUC2D() {
         int[][] distanceMatrix = new int[dimension-1][dimension-1];
-        dataPoints = parseDataPoints();
+        dataPoints = parseDataPoints(6);
         for (int i = 1; i < dimension; i++) {
             for (int j = 1; j < dimension; j++) {
                 double xd = dataPoints.get(i).get(0) - dataPoints.get(j).get(0);
@@ -144,12 +144,36 @@ public class Data {
 
     public int[][] parseGEO() {
         int[][] distanceMatrix = new int[dimension-1][dimension-1];
+        dataPoints = parseDataPoints(8);
+        for (int i = 1; i < dimension; i++) {
+            for (int j = 1; j < dimension; j++) {
+                double[] iCoordinates = calculateCoordinates(dataPoints.get(i).get(0), dataPoints.get(i).get(1));
+                double[] jCoordinates = calculateCoordinates(dataPoints.get(j).get(0), dataPoints.get(j).get(1));
+                double RRR = 6378.388;
+                double q1 = Math.cos(iCoordinates[1] - jCoordinates[1]);
+                double q2 = Math.cos(iCoordinates[0] - jCoordinates[0]);
+                double q3 = Math.cos(iCoordinates[0] + jCoordinates[0]);
+                int dij = (int) ( RRR * Math.acos( 0.5*((1.0+q1)*q2 - (1.0-q1)*q3) ) + 1.0);
+                distanceMatrix[i-1][j-1] = dij;
+            }
+        }
         return distanceMatrix;
+    }
+
+    private double[] calculateCoordinates(double x, double y) {
+        double[] coordinates = new double[2];
+        int deg = (int) Math.round(x);
+        double min = x - deg;
+        coordinates[0] = Math.PI * (deg + 5.0 * min / 3.0) / 180.0;
+        deg = (int) Math.round(y);
+        min = y - deg;
+        coordinates[1] = Math.PI * (deg + 5.0 * min / 3.0) / 180.0;
+        return coordinates;
     }
 
     public int[][] parseATT() {
         int[][] distanceMatrix = new int[dimension-1][dimension-1];
-        dataPoints = parseDataPoints();
+        dataPoints = parseDataPoints(6);
         for (int i = 1; i < dimension; i++) {
             for (int j = 1; j < dimension; j++) {
                 double xd = dataPoints.get(i).get(0) - dataPoints.get(j).get(0);
@@ -175,7 +199,7 @@ public class Data {
 
         Data att = new Data("att48");
 
-        //Data brazil = new Data("brazil58");
+        Data burma = new Data("burma14");
     }
 }
 
