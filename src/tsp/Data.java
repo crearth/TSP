@@ -35,6 +35,10 @@ public class Data {
      */
     public String edgeWeightType = null;
     /**
+     * The format of the edge weights (only for matrices).
+     */
+    public String edgeWeightFormat = null;
+    /**
      * The data points in x,y coordinates and with a number.
      */
     public HashMap<Integer, ArrayList<Double>> dataPoints = new HashMap<>();
@@ -90,6 +94,23 @@ public class Data {
         type = content.get(1).split(": ")[1];
         dimension = Integer.parseInt(content.get(3).split(": ")[1]);
         edgeWeightType = content.get(4).split(": ")[1];
+        if (edgeWeightType.equals("EXPLICIT")) {
+            edgeWeightFormat = content.get(5).split(": ")[1];
+        }
+    }
+
+    /**
+     * Get the index of the first line that starts with an integer.
+     * @return integer start
+     */
+    private int getStartIndex() {
+        for (int i = 0; i < content.size(); i++) {
+            // regex 1 of meer digits
+            if (content.get(i).trim().substring(0,1).matches("\\d+")) {
+                return i;
+            }
+        }
+        return 0;
     }
 
     /**
@@ -134,7 +155,7 @@ public class Data {
      */
     public int[][] parseEUC2D() {
         int[][] distanceMatrix = new int[dimension-1][dimension-1];
-        dataPoints = parseDataPoints(6);
+        dataPoints = parseDataPoints(getStartIndex());
         for (int i = 1; i < dimension; i++) {
             for (int j = 1; j < dimension; j++) {
                 double xd = dataPoints.get(i).get(0) - dataPoints.get(j).get(0);
@@ -152,7 +173,7 @@ public class Data {
      */
     public int[][] parseGEO() {
         int[][] distanceMatrix = new int[dimension-1][dimension-1];
-        dataPoints = parseDataPoints(8);
+        dataPoints = parseDataPoints(getStartIndex());
         for (int i = 1; i < dimension; i++) {
             for (int j = 1; j < dimension; j++) {
                 double[] iCoordinates = calculateCoordinates(dataPoints.get(i).get(0), dataPoints.get(i).get(1));
@@ -174,7 +195,7 @@ public class Data {
      */
     public int[][] parseATT() {
         int[][] distanceMatrix = new int[dimension-1][dimension-1];
-        dataPoints = parseDataPoints(6);
+        dataPoints = parseDataPoints(getStartIndex());
         for (int i = 1; i < dimension; i++) {
             for (int j = 1; j < dimension; j++) {
                 double xd = dataPoints.get(i).get(0) - dataPoints.get(j).get(0);
