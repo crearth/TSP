@@ -64,6 +64,10 @@ public class Data {
         return dimension;
     }
 
+    public int[][] getDistanceMatrix() {
+        return distanceMatrix;
+    }
+
     /**
      * set the file from the data folder with the given name
      */
@@ -143,9 +147,9 @@ public class Data {
             case "EUC_2D" -> parseEUC2D();
             case "GEO" -> parseGEO();
             case "ATT" -> parseATT();
-            default -> new int[dimension - 1][dimension - 1];
+            //case "EXPLICIT" -> parseMatrix();
+            default -> null;
         };
-        System.out.println(Arrays.deepToString(distanceMatrix));
         return distanceMatrix;
     }
 
@@ -213,6 +217,17 @@ public class Data {
         }
         return distanceMatrix;
     }
+
+    /**public int[][] parseMatrix() {
+        return switch (edgeWeightFormat) {
+            case "FULL_MATRIX" -> parseFullMatrix();
+            case "UPPER_ROW", "LOWER_COL" -> parseUpperRow();
+            case "LOWER_ROW", "UPPER_COL" -> parseLowerRow();
+            case "UPPER_DIAG_ROW", "LOWER_DIAG_COL" -> parseUpperDiagRow();
+            case "LOWER_DIAG_ROW", "UPPER_DIAG_COL" -> parseLowerDiagRow();
+            default -> null;
+        };
+    }**/
 
     /**
      * Help function to calculate the longitude and latitude for the GEO-parser
