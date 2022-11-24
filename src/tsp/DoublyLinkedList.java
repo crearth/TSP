@@ -34,25 +34,24 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
      * @param item
      */
     public void insertItemEnd(int item) {
-        //Create a new node
         Node newNode = new Node(item);
 
         //if list is empty, head and tail points to newNode
         if(head == null) {
             head = tail = newNode;
-            head.previous = null;
-            tail.next = null;
+            head.previous = newNode;
+            tail.next = newNode;
         }
         else {
-            //add newNode to the end of list. tail->next set to newNode
             tail.next = newNode;
-            //newNode->previous set to tail
             newNode.previous = tail;
-            //newNode becomes new tail
             tail = newNode;
-            //tail's next point to null
-            tail.next = null;
+            tail.next = head;
         }
+    }
+
+    public void swap(int i, int j) {
+        // swap two items (their pointers)
     }
 
     /**
