@@ -39,7 +39,7 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
         //if list is empty, head and tail points to newNode
         if(head == null) {
             head = tail = newNode;
-            head.previous = newNode;
+            head.previous = tail;
             tail.next = newNode;
         }
         else {
