@@ -39,8 +39,8 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
 
         //if list is empty, head and tail points to newNode
         if(head == null) {
-            head.previous = null;
             head = tail = newNode;
+            head.previous = null;
             tail.next = null;
         }
         else {
@@ -55,17 +55,16 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
         }
     }
 
-    //print all the nodes of doubly linked list
-    public void printNodes() {
-        //Node current will point to head
+    /**
+     * Print the items of the doubly linked list.
+     */
+    public void printItems() {
         Node current = head;
         if(head == null) {
             System.out.println("Doubly linked list is empty");
             return;
         }
-        System.out.println("Nodes of doubly linked list: ");
         while(current != null) {
-            //Print each node and then go to next.
             System.out.print(current.item + " ");
             current = current.next;
         }
