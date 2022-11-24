@@ -6,6 +6,7 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
      */
     Node head = null;
     Node tail = null;
+    int numberOfElements = 0;
 
     /**
      * An inner class for nodes
@@ -29,29 +30,69 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
         // maybe not needed
     }
 
+    public void add(int index, int item) {
+        if (index < 0 || index > numberOfElements)
+            throw new IllegalArgumentException();
+        Node newNode = new Node(item);
+        if (head == null) {
+            head = newNode;
+            tail = newNode;
+            head.previous = tail;
+            tail.next = head;
+        }
+        else if (index == 0) {
+            newNode.next = head;
+            head.previous = newNode;
+            head = newNode;
+            head.previous = tail;
+            tail.next = head;
+        }
+        else if (index == numberOfElements) {
+            newNode.previous = tail;
+            tail.next = newNode;
+            tail = newNode;
+            tail.next = head;
+            head.previous = tail;
+        }
+        else {
+            Node nodeRef = head;
+            for (int i = 1; i < index; i++)
+                nodeRef = nodeRef.next;
+            newNode.next = nodeRef.next;
+            nodeRef.next = newNode;
+            newNode.previous = nodeRef;
+            newNode.next.previous = newNode;
+        }
+        numberOfElements++;
+    }
+
     /**
      * Add an item to the end of list
      * @param item
      */
     public void insertItemEnd(int item) {
-        Node newNode = new Node(item);
-
-        //if list is empty, head and tail points to newNode
-        if(head == null) {
-            head = tail = newNode;
-            head.previous = tail;
-            tail.next = newNode;
-        }
-        else {
-            tail.next = newNode;
-            newNode.previous = tail;
-            tail = newNode;
-            tail.next = head;
-        }
+        add(numberOfElements, item);
     }
 
     public void swap(int i, int j) {
-        // swap two items (their pointers)
+        Node temp;
+        temp = Node1.next;
+        Node1.next = Node2.next;
+        Node2.next = temp;
+
+        if (Node1.next != null)
+            Node1.next.prev = Node1;
+        if (Node2.next != null)
+            Node2.next.prev = Node2;
+
+        temp = Node1.prev;
+        Node1.prev = Node2.prev;
+        Node2.prev = temp;
+
+        if (Node1.prev != null)
+            Node1.prev.next = Node1;
+        if (Node2.prev != null)
+            Node2.prev.next = Node2;
     }
 
     /**
