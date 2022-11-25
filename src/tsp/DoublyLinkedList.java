@@ -1,12 +1,19 @@
 package tsp;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public class DoublyLinkedList implements DoublyLinkedListInterface {
+    //TODO lijst bijhouden met indices en nodes, zodat zoeken naar node constant isé
+
     /**
      * Set head and tail to null
      */
     Node head = null;
     Node tail = null;
     int numberOfElements = 0;
+
+    ArrayList<Node> indicesList = new ArrayList<Node>();
 
     /**
      * An inner class for nodes
@@ -37,6 +44,7 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
         if (head == null) {
             head = newNode;
             tail = newNode;
+            // circular doubly linked list
             head.previous = tail;
             tail.next = head;
         }
@@ -44,6 +52,7 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
             newNode.next = head;
             head.previous = newNode;
             head = newNode;
+            // circular doubly linked list
             head.previous = tail;
             tail.next = head;
         }
@@ -51,6 +60,7 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
             newNode.previous = tail;
             tail.next = newNode;
             tail = newNode;
+            // circular doubly linked list
             tail.next = head;
             head.previous = tail;
         }
@@ -63,6 +73,7 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
             newNode.previous = nodeRef;
             newNode.next.previous = newNode;
         }
+        indicesList.add(index, newNode);
         numberOfElements++;
     }
 
@@ -75,24 +86,26 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
     }
 
     public void swap(int i, int j) {
+        Node nodeI = indicesList.get(i);
+        Node nodeJ = indicesList.get(j);
         Node temp;
-        temp = Node1.next;
-        Node1.next = Node2.next;
-        Node2.next = temp;
+        temp = nodeI.next;
+        nodeI.next = nodeJ.next;
+        nodeJ.next = temp;
 
-        if (Node1.next != null)
-            Node1.next.prev = Node1;
-        if (Node2.next != null)
-            Node2.next.prev = Node2;
+        if (nodeI.next != null)
+            nodeI.next.previous = nodeI;
+        if (nodeJ.next != null)
+            nodeJ.next.previous = nodeJ;
 
-        temp = Node1.prev;
-        Node1.prev = Node2.prev;
-        Node2.prev = temp;
+        temp = nodeI.previous;
+        nodeI.previous = nodeJ.previous;
+        nodeJ.previous = temp;
 
-        if (Node1.prev != null)
-            Node1.prev.next = Node1;
-        if (Node2.prev != null)
-            Node2.prev.next = Node2;
+        if (nodeI.previous != null)
+            nodeI.previous.next = nodeI;
+        if (nodeJ.previous != null)
+            nodeJ.previous.next = nodeJ;
     }
 
     /**
