@@ -37,6 +37,22 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
         return indicesList.get(index).item;
     }
 
+    public Node getNode(int index) {
+        return indicesList.get(index);
+    }
+
+    public Node searchItem(int item) {
+        Node current = head;
+        for (int i = 0; i < numberOfElements; i++) {
+            if (current.item == item) {
+                return current;
+            } else {
+                current = current.next;
+            }
+        }
+        return current;
+    }
+
     /**
      * Insert an item at index x of the list
      * @param index the position in the list to add the item
@@ -91,8 +107,6 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
     }
 
     public void swap(int i, int j) {
-        System.out.println("voor swap: " + indicesList);
-
         Node nodeI = indicesList.get(i);
         Node nodeJ = indicesList.get(j);
         Node temp;
@@ -114,9 +128,28 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
         if (nodeJ.previous != null)
             nodeJ.previous.next = nodeJ;
 
-        Collections.swap(indicesList, i, j);
+        if (nodeI == head) {
+            head = nodeJ;
+        } else if (nodeJ == head) {
+            head = nodeI;
+        }
 
-        System.out.println("na swap: " + indicesList);
+        if (nodeI == tail) {
+            tail = nodeJ;
+        } else if (nodeJ == tail) {
+            tail = nodeI;
+        }
+
+        Collections.swap(indicesList, i, j);
+    }
+
+    public void twoOpt(int i, int j) {
+        while(j >= i) {
+            swap(i,j);
+            i++;
+            j--;
+        }
+
     }
 
     /**

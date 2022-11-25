@@ -8,16 +8,28 @@ import static org.junit.Assert.*;
 public class DoublyLinkedListTest {
     private DoublyLinkedList emptyList;
     private DoublyLinkedList notEmptyList;
+    private DoublyLinkedList twoOptList;
 
     @Before
     public void setUp() {
         emptyList = new DoublyLinkedList();
+
         notEmptyList = new DoublyLinkedList();
         notEmptyList.addEnd(4);
         notEmptyList.addEnd(6);
         notEmptyList.addEnd(7);
         notEmptyList.addEnd(8);
         notEmptyList.addEnd(9);
+
+        twoOptList = new DoublyLinkedList();
+        twoOptList.addEnd(1);
+        twoOptList.addEnd(2);
+        twoOptList.addEnd(3);
+        twoOptList.addEnd(4);
+        twoOptList.addEnd(5);
+        twoOptList.addEnd(6);
+        twoOptList.addEnd(7);
+        twoOptList.addEnd(8);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -75,5 +87,41 @@ public class DoublyLinkedListTest {
         notEmptyList.swap(0,4);
         assertEquals(notEmptyList.getItem(0), 9);
         assertEquals(notEmptyList.getItem(4), 4);
+
+        assertEquals(notEmptyList.searchItem(4), notEmptyList.getNode(4));
+        assertEquals(notEmptyList.searchItem(9), notEmptyList.getNode(0));
     }
+
+    @Test
+    public void testTwoOpt15() {
+        twoOptList.twoOpt(1,5);
+
+        assertEquals(twoOptList.getItem(1), 6);
+        assertEquals(twoOptList.searchItem(6), twoOptList.getNode(1));
+
+        assertEquals(twoOptList.getItem(2), 5);
+        assertEquals(twoOptList.searchItem(5), twoOptList.getNode(2));
+
+        assertEquals(twoOptList.getItem(3), 4);
+        assertEquals(twoOptList.searchItem(4), twoOptList.getNode(3));
+
+        assertEquals(twoOptList.getItem(4), 3);
+        assertEquals(twoOptList.searchItem(3), twoOptList.getNode(4));
+
+        assertEquals(twoOptList.getItem(5), 2);
+        assertEquals(twoOptList.searchItem(2), twoOptList.getNode(5));
+    }
+
+    @Test
+    public void testTwoOpt16() {
+        twoOptList.twoOpt(1,6);
+
+        assertEquals(twoOptList.getItem(1), 7);
+        assertEquals(twoOptList.searchItem(7), twoOptList.getNode(1));
+
+        assertEquals(twoOptList.getItem(2), 6);
+        assertEquals(twoOptList.searchItem(6), twoOptList.getNode(2));
+    }
+
+
 }
