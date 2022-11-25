@@ -1,7 +1,8 @@
 package tsp;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class DoublyLinkedList implements DoublyLinkedListInterface {
     //TODO lijst bijhouden met indices en nodes, zodat zoeken naar node constant isé
@@ -9,11 +10,10 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
     /**
      * Set head and tail to null
      */
-    Node head = null;
-    Node tail = null;
-    int numberOfElements = 0;
-
-    ArrayList<Node> indicesList = new ArrayList<Node>();
+    private Node head = null;
+    private Node tail = null;
+    private int numberOfElements = 0;
+    private ArrayList<Node> indicesList = new ArrayList<Node>();
 
     /**
      * An inner class for nodes
@@ -26,17 +26,22 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
         public Node(int item) {
             this.item = item;
         }
+
+        @Override
+        public String toString() {
+            return String.valueOf(previous.item) + " <- " + String.valueOf(item) + " -> " + String.valueOf(next.item);
+        }
+    }
+
+    public int getItem(int index) {
+        return indicesList.get(index).item;
     }
 
     /**
-     * Insert an item at position x of the list
-     * @param item the item to add
-     * @param position the position in the list to add the item
+     * Insert an item at index x of the list
+     * @param index the position in the list to add the item
+     * @param item the item
      */
-    public void insertItem(int item, int position) {
-        // maybe not needed
-    }
-
     public void add(int index, int item) {
         if (index < 0 || index > numberOfElements)
             throw new IllegalArgumentException();
@@ -81,11 +86,13 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
      * Add an item to the end of list
      * @param item
      */
-    public void insertItemEnd(int item) {
+    public void addEnd(int item) {
         add(numberOfElements, item);
     }
 
     public void swap(int i, int j) {
+        System.out.println("voor swap: " + indicesList);
+
         Node nodeI = indicesList.get(i);
         Node nodeJ = indicesList.get(j);
         Node temp;
@@ -106,6 +113,10 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
             nodeI.previous.next = nodeI;
         if (nodeJ.previous != null)
             nodeJ.previous.next = nodeJ;
+
+        Collections.swap(indicesList, i, j);
+
+        System.out.println("na swap: " + indicesList);
     }
 
     /**
@@ -117,7 +128,7 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
             System.out.println("Doubly linked list is empty");
             return;
         }
-        while(current != null) {
+        for(int i = 0; i < numberOfElements; i++) {
             System.out.print(current.item + " ");
             current = current.next;
         }
