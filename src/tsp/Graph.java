@@ -1,5 +1,7 @@
 package tsp;
 
+import tsp.ts.TabuSearch;
+
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,5 +47,9 @@ public class Graph implements GraphInterface{
         Graph burma = new Graph("burma14");
         Tour burmaTour = burma.getTabuSearchBestTour(1000);
         System.out.println(burmaTour.getTourLength());
+
+        Graph berlin = new Graph("berlin52");
+        Tour berlinTour = berlin.getTabuSearchBestTour(100);
+        System.out.println(berlinTour.getTourLength());
     }
 }

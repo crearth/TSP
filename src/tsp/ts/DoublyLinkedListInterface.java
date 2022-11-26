@@ -1,4 +1,4 @@
-package tsp;
+package tsp.ts;
 
 public interface DoublyLinkedListInterface {
 

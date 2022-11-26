@@ -1,15 +1,18 @@
-package tsp;
+package tsp.ts;
 
-import java.io.FileNotFoundException;
+import tsp.Graph;
+import tsp.Pair;
+import tsp.Tour;
+
 import java.util.Collection;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class TabuSearch implements TabuSearchInterface{
+public class TabuSearch implements TabuSearchInterface {
     /**
      * Variable keeping the maximum amount of iterations.
      */
-    private int maxIterations;
+    private final int maxIterations;
     /**
      * Variable keeping the tabu list.
      */

@@ -1,7 +1,8 @@
-package tsp;
+package tsp.ts;
 
 import org.junit.Before;
 import org.junit.Test;
+import tsp.ts.DoublyLinkedList;
 
 import static org.junit.Assert.*;
 

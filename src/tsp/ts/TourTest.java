@@ -1,7 +1,9 @@
-package tsp;
+package tsp.ts;
 
 import org.junit.Before;
 import org.junit.Test;
+import tsp.Graph;
+import tsp.Tour;
 
 import java.io.FileNotFoundException;
 
