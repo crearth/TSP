@@ -1,8 +1,9 @@
 package tsp;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 public class DoublyLinkedList implements DoublyLinkedListInterface {
     //TODO lijst bijhouden met indices en nodes, zodat zoeken naar node constant isé
@@ -33,12 +34,27 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
         }
     }
 
+    public DoublyLinkedList() {
+
+    }
+
+    public DoublyLinkedList(List<Integer> list) {
+        DoublyLinkedList newDoublyLinkedList = new DoublyLinkedList();
+        for (Integer i : list) {
+            newDoublyLinkedList.addEnd(i);
+        }
+    }
+
     public int getItem(int index) {
         return indicesList.get(index).item;
     }
 
     public Node getNode(int index) {
         return indicesList.get(index);
+    }
+
+    public int getIndexOfNode(Node node) {
+        return indicesList.indexOf(node);
     }
 
     public Node searchItem(int item) {
@@ -109,6 +125,12 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
     public void swap(int i, int j) {
         Node nodeI = indicesList.get(i);
         Node nodeJ = indicesList.get(j);
+        swap(nodeI, nodeJ);
+    }
+
+    public void swap(Node nodeI, Node nodeJ) {
+        int i = getIndexOfNode(nodeI);
+        int j = getIndexOfNode(nodeJ);
         Node temp;
         temp = nodeI.next;
         nodeI.next = nodeJ.next;
@@ -149,13 +171,35 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
             i++;
             j--;
         }
+    }
 
+    public void twoOpt(Node nodeI, Node nodeJ) {
+        int i = getIndexOfNode(nodeI);
+        int j = getIndexOfNode(nodeJ);
+        while(j >= i) {
+            swap(i,j);
+            i++;
+            j--;
+        }
+    }
+
+    public ArrayList<Integer> toList() {
+        ArrayList<Integer> list = new ArrayList<>();
+        Node current = head;
+        if(head == null) {
+            return list;
+        }
+        for(int i = 0; i < numberOfElements; i++) {
+            list.add(current.item);
+            current = current.next;
+        }
+        return list;
     }
 
     /**
      * Print the items of the doubly linked list.
      */
-    public void printItems() {
+    public void print() {
         Node current = head;
         if(head == null) {
             System.out.println("Doubly linked list is empty");

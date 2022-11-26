@@ -12,8 +12,8 @@ public class Pair<A,B> {
         this.b = b;
     }
 
-    public A getLeft() { return a; }
-    public B getRight() { return b; }
+    public A getA() { return a; }
+    public B getB() { return b; }
 
     @Override
     public int hashCode() { return a.hashCode() ^ b.hashCode(); }
@@ -22,7 +22,7 @@ public class Pair<A,B> {
     public boolean equals(Object o) {
         if (!(o instanceof Pair)) return false;
         Pair pairo = (Pair) o;
-        return this.a.equals(pairo.getLeft()) &&
-                this.b.equals(pairo.getRight());
+        return this.a.equals(pairo.getA()) &&
+                this.b.equals(pairo.getB());
     }
 }
