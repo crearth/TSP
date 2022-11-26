@@ -158,10 +158,10 @@ public class Data {
      * @return a matrix with the distances from and to all vertices
      */
     public int[][] parseEUC2D() {
-        int[][] distanceMatrix = new int[dimension-1][dimension-1];
+        int[][] distanceMatrix = new int[dimension][dimension];
         dataPoints = parseDataPoints(getStartIndex());
-        for (int i = 1; i < dimension; i++) {
-            for (int j = 1; j < dimension; j++) {
+        for (int i = 1; i <= dimension; i++) {
+            for (int j = 1; j <= dimension; j++) {
                 double xd = dataPoints.get(i).get(0) - dataPoints.get(j).get(0);
                 double yd = dataPoints.get(i).get(1) - dataPoints.get(j).get(1);
                 int dij = (int) Math.round(Math.sqrt(xd*xd + yd*yd));
@@ -176,10 +176,10 @@ public class Data {
      * @return a matrix with the distances from and to all vertices
      */
     public int[][] parseGEO() {
-        int[][] distanceMatrix = new int[dimension-1][dimension-1];
+        int[][] distanceMatrix = new int[dimension][dimension];
         dataPoints = parseDataPoints(getStartIndex());
-        for (int i = 1; i < dimension; i++) {
-            for (int j = 1; j < dimension; j++) {
+        for (int i = 1; i <= dimension; i++) {
+            for (int j = 1; j <= dimension; j++) {
                 double[] iCoordinates = calculateCoordinates(dataPoints.get(i).get(0), dataPoints.get(i).get(1));
                 double[] jCoordinates = calculateCoordinates(dataPoints.get(j).get(0), dataPoints.get(j).get(1));
                 double RRR = 6378.388;
@@ -198,10 +198,10 @@ public class Data {
      * @return a matrix with the distances from and to all vertices
      */
     public int[][] parseATT() {
-        int[][] distanceMatrix = new int[dimension-1][dimension-1];
+        int[][] distanceMatrix = new int[dimension][dimension];
         dataPoints = parseDataPoints(getStartIndex());
-        for (int i = 1; i < dimension; i++) {
-            for (int j = 1; j < dimension; j++) {
+        for (int i = 1; i <= dimension; i++) {
+            for (int j = 1; j <= dimension; j++) {
                 double xd = dataPoints.get(i).get(0) - dataPoints.get(j).get(0);
                 double yd = dataPoints.get(i).get(1) - dataPoints.get(j).get(1);
                 double rij = Math.sqrt((xd*xd + yd*yd) / 10.0);
@@ -248,6 +248,8 @@ public class Data {
 
     public static void main(String[] args) throws FileNotFoundException {
         Data berlin = new Data("berlin52");
+        System.out.println(Arrays.deepToString(berlin.getDistanceMatrix()));
+        System.out.println(berlin.getDistanceMatrix().length);
 
         Data bier = new Data("bier127");
 
