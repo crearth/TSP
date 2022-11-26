@@ -1,11 +1,14 @@
 package tsp;
 
-import java.io.FileNotFoundException;
+import tsp.ts.DoublyLinkedList;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Tour implements TourInterface {
 
+    private List<Integer> tourList;
     private DoublyLinkedList doubleList;
     private final Graph graph;
 
@@ -15,12 +18,21 @@ public class Tour implements TourInterface {
 
     public Tour(Tour another) {
         this.graph = another.getGraph();
-        this.doubleList = new DoublyLinkedList(another.getTour());
+        // not good practice
+        if (another.getDoubleList() != null) {
+            this.doubleList = new DoublyLinkedList(another.getTour());
+        } else {
+            this.tourList = new ArrayList<>(another.getTour());
+        }
     }
 
     @Override
     public List<Integer> getTour() {
-        return doubleList.toList();
+        // not good practice ??
+        if (doubleList != null) {
+            return doubleList.toList();
+        }
+        return tourList;
     }
 
     private Graph getGraph() {
@@ -37,8 +49,9 @@ public class Tour implements TourInterface {
     @Override
     public int getTourLength() {
         int length = 0;
+        List<Integer> tour = getTour();
         for (int i = 0; i < graph.getNumberOfVertices() - 1; i++) {
-            length += graph.getDistance(getTour().get(i), getTour().get(i+1));
+            length += graph.getDistance(tour.get(i), tour.get(i+1));
         }
         length += graph.getDistance(getTour().get(0), getTour().get(getTour().size()-1));
         return length;
