@@ -24,9 +24,6 @@ public class TabuSearch implements TabuSearchInterface{
         this.graph = graph;
 
         tabuList = new ArrayBlockingQueue<Pair<Integer, Integer>>(graph.getNumberOfVertices());
-
-        //TODO dit is om te testen
-        tabuSearch(initialSolution());
     }
 
     /**
@@ -55,16 +52,18 @@ public class TabuSearch implements TabuSearchInterface{
             verticesNotTaken.remove(current);
             tourLinked.addEnd(current);
         }
-        tourLinked.print();
         tour.setDoubleList(tourLinked);
         return tour;
     }
 
+    public Tour getBestTour() {
+        return tabuSearch(initialSolution());
+    }
+
     @Override
-    public void tabuSearch(Tour initialSolution) {
+    public Tour tabuSearch(Tour initialSolution) {
         Tour s = initialSolution;
         Tour bestTour = s;
-        System.out.println(bestTour.getDoubleList());
 
         for (int maxi = 0; maxi < maxIterations; maxi++) {
             s = getBestCandidate(new Tour(s));
@@ -72,6 +71,7 @@ public class TabuSearch implements TabuSearchInterface{
                 bestTour = s;
             }
         }
+        return bestTour;
     }
 
     public Tour getBestCandidate(Tour initialTour) {
@@ -97,7 +97,12 @@ public class TabuSearch implements TabuSearchInterface{
                 }
             }
         }
-        tabuList.add(tabu);
+        try {
+            tabuList.add(tabu);
+        } catch (IllegalStateException e) {
+            tabuList.poll();
+            tabuList.add(tabu);
+        }
         return R;
     }
 
@@ -110,11 +115,5 @@ public class TabuSearch implements TabuSearchInterface{
     @Override
     public void twoOpt(DoublyLinkedList tour, int i, int j) {
         tour.twoOpt(tour.searchItem(i),tour.searchItem(j));
-    }
-
-    public static void main(String[] args) throws FileNotFoundException {
-        Graph berlin = new Graph("berlin52");
-
-        TabuSearch berlinTabu = new TabuSearch(100, berlin);
     }
 }

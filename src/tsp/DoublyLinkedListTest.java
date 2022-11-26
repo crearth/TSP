@@ -124,4 +124,15 @@ public class DoublyLinkedListTest {
     }
 
 
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testDeepCopy() {
+        DoublyLinkedList copy = new DoublyLinkedList(notEmptyList.toList());
+        assertEquals(copy.getItem(1), 6);
+        assertEquals(copy.getItem(4), 9);
+
+        copy.addEnd(10);
+        assertEquals(copy.getItem(5), 10);
+        assertNotEquals(notEmptyList.getItem(5), 10);
+    }
+
 }

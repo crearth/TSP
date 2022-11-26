@@ -14,7 +14,7 @@ public class Graph implements GraphInterface{
     @Override
     public Collection<Integer> getVertices() {
         Collection<Integer> vertices = new ArrayList<>();
-        for(int i = 1; i < data.getDimension(); i++){
+        for(int i = 1; i <= data.getDimension(); i++){
             vertices.add(i);
         }
         return vertices;
@@ -32,8 +32,8 @@ public class Graph implements GraphInterface{
 
     @Override
     public Tour getTabuSearchBestTour(int maxNumberOfIterations) {
-        TabuSearch test = new TabuSearch(maxNumberOfIterations, this);
-        return null;
+        TabuSearch tabuSearch = new TabuSearch(maxNumberOfIterations, this);
+        return tabuSearch.getBestTour();
     }
 
     @Override
@@ -42,9 +42,8 @@ public class Graph implements GraphInterface{
     }
 
     public static void main(String[] args) throws FileNotFoundException {
-        Graph berlin = new Graph("berlin52");
-        System.out.println(berlin.getNumberOfVertices());
-
-        berlin.getTabuSearchBestTour(100);
+        Graph burma = new Graph("burma14");
+        Tour burmaTour = burma.getTabuSearchBestTour(1000);
+        System.out.println(burmaTour.getTourLength());
     }
 }

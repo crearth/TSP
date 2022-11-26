@@ -245,17 +245,5 @@ public class Data {
         coordinates[1] = Math.PI * (deg + 5.0 * min / 3.0) / 180.0;
         return coordinates;
     }
-
-    public static void main(String[] args) throws FileNotFoundException {
-        Data berlin = new Data("berlin52");
-        System.out.println(Arrays.deepToString(berlin.getDistanceMatrix()));
-        System.out.println(berlin.getDistanceMatrix().length);
-
-        Data bier = new Data("bier127");
-
-        Data att = new Data("att48");
-
-        Data burma = new Data("burma14");
-    }
 }
 

@@ -39,9 +39,8 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
     }
 
     public DoublyLinkedList(List<Integer> list) {
-        DoublyLinkedList newDoublyLinkedList = new DoublyLinkedList();
         for (Integer i : list) {
-            newDoublyLinkedList.addEnd(i);
+            addEnd(i);
         }
     }
 
