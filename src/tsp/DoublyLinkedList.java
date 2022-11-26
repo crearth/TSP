@@ -1,6 +1,5 @@
 package tsp;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,7 +13,7 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
     private Node head = null;
     private Node tail = null;
     private int numberOfElements = 0;
-    private ArrayList<Node> indicesList = new ArrayList<Node>();
+    private ArrayList<Node> nodeIndicesList = new ArrayList<>();
 
     /**
      * An inner class for nodes
@@ -45,15 +44,15 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
     }
 
     public int getItem(int index) {
-        return indicesList.get(index).item;
+        return nodeIndicesList.get(index).item;
     }
 
     public Node getNode(int index) {
-        return indicesList.get(index);
+        return nodeIndicesList.get(index);
     }
 
     public int getIndexOfNode(Node node) {
-        return indicesList.indexOf(node);
+        return nodeIndicesList.indexOf(node);
     }
 
     public Node searchItem(int item) {
@@ -109,7 +108,7 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
             newNode.previous = nodeRef;
             newNode.next.previous = newNode;
         }
-        indicesList.add(index, newNode);
+        nodeIndicesList.add(index, newNode);
         numberOfElements++;
     }
 
@@ -122,8 +121,8 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
     }
 
     public void swap(int i, int j) {
-        Node nodeI = indicesList.get(i);
-        Node nodeJ = indicesList.get(j);
+        Node nodeI = nodeIndicesList.get(i);
+        Node nodeJ = nodeIndicesList.get(j);
         swap(nodeI, nodeJ);
     }
 
@@ -161,7 +160,7 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
             tail = nodeI;
         }
 
-        Collections.swap(indicesList, i, j);
+        Collections.swap(nodeIndicesList, i, j);
     }
 
     public void twoOpt(int i, int j) {
