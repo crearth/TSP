@@ -16,6 +16,11 @@ public class Tour implements TourInterface {
         this.graph = graph;
     }
 
+    public Tour(Graph graph, List<Integer> list) {
+        this(graph);
+        tourList = list;
+    }
+
     public Tour(Tour another) {
         this.graph = another.getGraph();
         // not good practice
@@ -53,7 +58,7 @@ public class Tour implements TourInterface {
         for (int i = 0; i < graph.getNumberOfVertices() - 1; i++) {
             length += graph.getDistance(tour.get(i), tour.get(i+1));
         }
-        length += graph.getDistance(getTour().get(0), getTour().get(getTour().size()-1));
+        length += graph.getDistance(tour.get(0), tour.get(tour.size()-1));
         return length;
     }
 

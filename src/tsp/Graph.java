@@ -3,6 +3,7 @@ package tsp;
 import tsp.ts.TabuSearch;
 
 import java.io.FileNotFoundException;
+import java.time.Clock;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -49,7 +50,27 @@ public class Graph implements GraphInterface{
         System.out.println(burmaTour.getTourLength());
 
         Graph berlin = new Graph("berlin52");
-        Tour berlinTour = berlin.getTabuSearchBestTour(100);
-        System.out.println(berlinTour.getTourLength());
+        long start = System.nanoTime();
+        Tour berlinTour = berlin.getTabuSearchBestTour(1000);
+        long stop = System.nanoTime();
+        long time = stop - start;
+        double timeSeconds = (double) time / 1_000_000_000;
+        System.out.println(berlinTour.getTourLength() + " in " + timeSeconds + " seconds");
+
+        /*Graph att = new Graph("att532");
+        start = System.nanoTime();
+        Tour attTour = att.getTabuSearchBestTour(100);
+        stop = System.nanoTime();
+        time = stop - start;
+        timeSeconds = (double) time / 1_000_000_000;
+        System.out.println(attTour.getTourLength() + " in " + timeSeconds + " seconds");*/
+
+        Graph eil = new Graph("eil76");
+        start = System.nanoTime();
+        Tour eilTour = eil.getTabuSearchBestTour(1000);
+        stop = System.nanoTime();
+        time = stop - start;
+        timeSeconds = (double) time / 1_000_000_000;
+        System.out.println(eilTour.getTourLength() + " in " + timeSeconds + " seconds");
     }
 }
