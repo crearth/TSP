@@ -2,10 +2,9 @@ package tsp.aco;
 
 import tsp.Graph;
 import tsp.Tour;
-import tsp.ts.DoublyLinkedList;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -15,17 +14,28 @@ public class AntColonySystem {
 
     private int numberOfAnts;
 
-    private double evaporationRateB; //2 - 5
     private double alpha = 1;
+    private double beta; //2 - 5
+    private double evaporationRate;
+    private double localEvaporationRate;
+    private double initialPheromoneValueACS;
+    /**
+     * Variable keeping the maximum amount of iterations.
+     */
+    private final int maxIterations;
 
 
 
-    public AntColonySystem(Graph graph, int numberOfAnts) {
+    public AntColonySystem(int maxIterations, Graph graph) {
+        this.maxIterations = maxIterations;
         this.graph = graph;
-        this.numberOfAnts = numberOfAnts;
-        evaporationRateB = 2;
+        pheromoneTrail = new double[graph.getNumberOfVertices()][graph.getNumberOfVertices()];
+        numberOfAnts = 10;
+        beta = 2;
+        evaporationRate = 0.1;
+        localEvaporationRate = 0.1;
 
-        initializePheromoneTrailACS();
+        setInitialPheromoneValueACS();
     }
 
     public Graph getGraph() {
@@ -36,8 +46,36 @@ public class AntColonySystem {
         return pheromoneTrail[i-1][j-1];
     }
 
-    public double getEvaporationRateB() {
-        return evaporationRateB;
+    public double getBeta() {
+        return beta;
+    }
+
+    public double getLocalEvaporationRate() {
+        return localEvaporationRate;
+    }
+
+    public double getInitialPheromoneValueACS() {
+        return initialPheromoneValueACS;
+    }
+
+    public Tour getBestTour() {
+        return antColonySystem();
+    }
+
+    public Tour antColonySystem() {
+        initializePheromoneTrailACS();
+        Tour bestTour = null;
+        Ant sAnt = null;
+        Tour s = null;
+        for (int maxI = 0; maxI < maxIterations; maxI++) {
+            sAnt = getBestAnt();
+            s = sAnt.getTour();
+            updatePheromoneTrail(sAnt);
+            if (bestTour == null || s.getTourLength() < bestTour.getTourLength()) {
+                bestTour = s;
+            }
+        }
+        return bestTour;
     }
 
     public Ant getBestAnt() {
@@ -57,7 +95,31 @@ public class AntColonySystem {
         return bestAnt;
     }
 
-    //TODO iterate getBestAnt with pheromone trail update
+    /**
+     * Update the pheromone trail with data from the best ant.
+     * @param bestAnt The ant that produced the best tour.
+     */
+    private void updatePheromoneTrail(Ant bestAnt) {
+        Tour tourAnt = bestAnt.getTour();
+        double tourAntCost = tourAnt.getTourLength();
+        ArrayList<Integer> tourAntList = (ArrayList<Integer>) tourAnt.getTour();
+        for (int v = 0; v < tourAntList.size() - 1; v++){
+            int i = tourAntList.get(v);
+            int j = tourAntList.get(v+1);
+            double value = (1 - evaporationRate) * getPheromoneValue(i, j) + evaporationRate * (1/tourAntCost);
+            updatePheromoneTrail(i, j, value);
+        }
+    }
+
+    /**
+     * Update the pheromone trail between vertex i and j with the given value.
+     * @param i The fist vertex.
+     * @param j The second vertex.
+     * @param value The value to change the pheromone trail with.
+     */
+    public void updatePheromoneTrail(int i, int j, double value) {
+        pheromoneTrail[i-1][j-1] = value;
+    }
 
     /**
      * This is used with Ant System
@@ -67,9 +129,9 @@ public class AntColonySystem {
     private void initializePheromoneTrailAS() {
         int graphDimension = graph.getNumberOfVertices();
         int nearestNeighborCost = nearestNeighbor().getTourLength();
-        for (int i = 0; i < graphDimension; i++) {
-            for (int j = 0; j < graphDimension; j++) {
-                pheromoneTrail[i][j] = (double) numberOfAnts / nearestNeighborCost;
+        for (int i = 1; i <= graphDimension; i++) {
+            for (int j = 1; j <= graphDimension; j++) {
+                pheromoneTrail[i-1][j-1] = (double) numberOfAnts / nearestNeighborCost;
             }
         }
     }
@@ -81,17 +143,21 @@ public class AntColonySystem {
      */
     private void initializePheromoneTrailACS() {
         int graphDimension = graph.getNumberOfVertices();
-        int nearestNeighborCost = nearestNeighbor().getTourLength();
-        for (int i = 0; i < graphDimension; i++) {
-            for (int j = 0; j < graphDimension; j++) {
-                pheromoneTrail[i][j] = (double) 1 / (graphDimension * nearestNeighborCost);
+        for (int i = 1; i <= graphDimension; i++) {
+            for (int j = 1; j <= graphDimension; j++) {
+                updatePheromoneTrail(i,j,initialPheromoneValueACS);
             }
         }
     }
 
+    private void setInitialPheromoneValueACS() {
+        int graphDimension = graph.getNumberOfVertices();
+        int nearestNeighborCost = nearestNeighbor().getTourLength();
+        initialPheromoneValueACS = (double) 1 / (graphDimension * nearestNeighborCost);
+    }
+
     private Tour nearestNeighbor() {
-        Tour tour = new Tour(graph);
-        List<Integer> tourList = tour.getTour();
+        List<Integer> tourList = new ArrayList<Integer>();
         ArrayList<Integer> verticesNotTaken = new ArrayList<Integer>(graph.getVertices());
         int current = ThreadLocalRandom.current().nextInt(1, graph.getNumberOfVertices() + 1);
         verticesNotTaken.remove((Integer) current);
@@ -110,6 +176,6 @@ public class AntColonySystem {
             verticesNotTaken.remove((Integer) current);
             tourList.add(current);
         }
-        return tour;
+        return new Tour(graph, tourList);
     }
 }

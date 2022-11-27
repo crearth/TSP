@@ -4,7 +4,6 @@ import tsp.Graph;
 import tsp.Tour;
 
 import java.io.FileNotFoundException;
-import java.lang.invoke.DelegatingMethodHandle$Holder;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -19,7 +18,6 @@ public class Ant {
         this.system = system;
         this.graph = system.getGraph();
         unvisitedVertices = new ArrayList<Integer>(graph.getVertices());
-        antTour = createTour();
     }
 
     /**
@@ -33,22 +31,23 @@ public class Ant {
         tourList.add(current);
         int bestVertex = 0;
         double q0 = 0.9; // CONSTANT TO CHOSE OPTIMALLY //TODO place it somewhere else
-        double evaporationRateB = system.getEvaporationRateB();
+        double beta = system.getBeta();
         while(unvisitedVertices.size() > 0) {
             double bestPheromone = Integer.MIN_VALUE;
             double q = getRandomDouble();
             double argSum = 0;
             for (int i : unvisitedVertices) {
                 double pheromoneValue = system.getPheromoneValue(current, i);
-                int heuristicValue = 1 / graph.getDistance(current, i);
-                argSum += pheromoneValue * Math.pow(heuristicValue, evaporationRateB);
+                double heuristicValue = (double) 1 / graph.getDistance(current, i);
+                double value = pheromoneValue * Math.pow(heuristicValue, beta);
+                argSum += value;
             }
             if (q <= q0) {
                 for (int i : unvisitedVertices) {
                     double pheromoneValue = system.getPheromoneValue(current, i);
-                    int heuristicValue = 1 / graph.getDistance(current, i);
-                    double arg = pheromoneValue * Math.pow(heuristicValue, evaporationRateB);
-                    if (arg < bestPheromone) {
+                    double heuristicValue = (double) 1 / graph.getDistance(current, i);
+                    double arg = pheromoneValue * Math.pow(heuristicValue, beta);
+                    if (arg > bestPheromone) {
                         bestPheromone = arg;
                         bestVertex = i;
                     }
@@ -56,19 +55,33 @@ public class Ant {
             } else {
                 for (int i : unvisitedVertices) {
                     double pheromoneValue = system.getPheromoneValue(current, i);
-                    int heuristicValue = 1 / graph.getDistance(current, i);
-                    double arg = (pheromoneValue * Math.pow(heuristicValue, evaporationRateB)) / argSum;
-                    if (arg < bestPheromone) {
+                    double heuristicValue = (double) 1 / graph.getDistance(current, i);
+                    double arg = (pheromoneValue * Math.pow(heuristicValue, beta)) / argSum;
+                    if (arg > bestPheromone) {
                         bestPheromone = arg;
                         bestVertex = i;
                     }
                 }
             }
+            if (tourList.size() > 1) {
+                localPheromoneTrailUpdate(current, bestVertex);
+            }
             current = bestVertex;
             unvisitedVertices.remove((Integer) current);
             tourList.add(current);
         }
-        return new Tour(graph, tourList);
+        antTour = new Tour(graph, tourList);
+        return antTour;
+    }
+
+    private void localPheromoneTrailUpdate(int i, int j) {
+        double initialPheromoneValue = system.getInitialPheromoneValueACS();
+        double value = (1 - system.getLocalEvaporationRate()) * system.getPheromoneValue(i, j) + system.getLocalEvaporationRate() * initialPheromoneValue;
+        system.updatePheromoneTrail(i, j, value);
+    }
+
+    public Tour getTour() {
+        return antTour;
     }
 
     /**
@@ -81,10 +94,6 @@ public class Ant {
 
     private double getRandomDouble() {
         return ThreadLocalRandom.current().nextDouble(0,1);
-    }
-
-    public static void main(String[] args) throws FileNotFoundException {
-        //Ant ant = new Ant(new Graph("berlin52"));
     }
 
 }

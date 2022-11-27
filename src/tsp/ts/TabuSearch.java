@@ -69,7 +69,7 @@ public class TabuSearch implements TabuSearchInterface {
         Tour s = initialSolution;
         Tour bestTour = s;
 
-        for (int maxi = 0; maxi < maxIterations; maxi++) {
+        for (int maxI = 0; maxI < maxIterations; maxI++) {
             s = getBestCandidate(new Tour(s));
             if (s.getTourLength() < bestTour.getTourLength()) {
                 bestTour = s;

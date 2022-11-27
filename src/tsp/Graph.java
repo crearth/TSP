@@ -1,5 +1,7 @@
 package tsp;
 
+import tsp.aco.Ant;
+import tsp.aco.AntColonySystem;
 import tsp.ts.TabuSearch;
 
 import java.io.FileNotFoundException;
@@ -41,21 +43,32 @@ public class Graph implements GraphInterface{
 
     @Override
     public Tour getOtherHeuristicBestTour(int maxNumberOfIterations) {
-        return null;
+        AntColonySystem antColonySystem = new AntColonySystem(maxNumberOfIterations, this);
+        return antColonySystem.getBestTour();
     }
 
     public static void main(String[] args) throws FileNotFoundException {
         Graph burma = new Graph("burma14");
-        Tour burmaTour = burma.getTabuSearchBestTour(1000);
-        System.out.println(burmaTour.getTourLength());
+        Tour burmaTourTS = burma.getTabuSearchBestTour(1000);
+        System.out.println(burmaTourTS.getTourLength());
+        Tour burmaTourACS = burma.getOtherHeuristicBestTour(10);
+        System.out.println(burmaTourTS.getTourLength());
 
         Graph berlin = new Graph("berlin52");
+        // TS
         long start = System.nanoTime();
-        Tour berlinTour = berlin.getTabuSearchBestTour(1000);
+        Tour berlinTourTS = berlin.getTabuSearchBestTour(1000);
         long stop = System.nanoTime();
         long time = stop - start;
         double timeSeconds = (double) time / 1_000_000_000;
-        System.out.println(berlinTour.getTourLength() + " in " + timeSeconds + " seconds");
+        System.out.println("Tabu Search result: " + berlinTourTS.getTourLength() + " in " + timeSeconds + " seconds");
+        // ACS
+        start = System.nanoTime();
+        Tour berlinTourACS = berlin.getOtherHeuristicBestTour(1000);
+        stop = System.nanoTime();
+        time = stop - start;
+        timeSeconds = (double) time / 1_000_000_000;
+        System.out.println("Ant Colony System result: " + berlinTourACS.getTourLength() + " in " + timeSeconds + " seconds");
 
         /*Graph att = new Graph("att532");
         start = System.nanoTime();
@@ -66,11 +79,19 @@ public class Graph implements GraphInterface{
         System.out.println(attTour.getTourLength() + " in " + timeSeconds + " seconds");*/
 
         Graph eil = new Graph("eil76");
+        // TS
         start = System.nanoTime();
-        Tour eilTour = eil.getTabuSearchBestTour(1000);
+        Tour eilTourTS = eil.getTabuSearchBestTour(1000);
         stop = System.nanoTime();
         time = stop - start;
         timeSeconds = (double) time / 1_000_000_000;
-        System.out.println(eilTour.getTourLength() + " in " + timeSeconds + " seconds");
+        System.out.println("Tabu Search result: " + eilTourTS.getTourLength() + " in " + timeSeconds + " seconds");
+        // ACS
+        start = System.nanoTime();
+        Tour eilTourACS = eil.getOtherHeuristicBestTour(1000);
+        stop = System.nanoTime();
+        time = stop - start;
+        timeSeconds = (double) time / 1_000_000_000;
+        System.out.println("Ant Colony System result: " + eilTourACS.getTourLength() + " in " + timeSeconds + " seconds");
     }
 }

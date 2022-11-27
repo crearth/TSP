@@ -8,8 +8,8 @@ import java.util.List;
 
 public class Tour implements TourInterface {
 
-    private List<Integer> tourList;
-    private DoublyLinkedList doubleList;
+    private List<Integer> tourList = new ArrayList<Integer>();
+    private DoublyLinkedList doubleList = null;
     private final Graph graph;
 
     public Tour(Graph graph) {
@@ -18,7 +18,7 @@ public class Tour implements TourInterface {
 
     public Tour(Graph graph, List<Integer> list) {
         this(graph);
-        tourList = list;
+        tourList = new ArrayList<Integer>(list);
     }
 
     public Tour(Tour another) {
@@ -38,6 +38,10 @@ public class Tour implements TourInterface {
             return doubleList.toList();
         }
         return tourList;
+    }
+
+    public void add(int vertex) {
+
     }
 
     private Graph getGraph() {
