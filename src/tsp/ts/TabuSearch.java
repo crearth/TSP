@@ -4,6 +4,7 @@ import tsp.Graph;
 import tsp.Pair;
 import tsp.Tour;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
@@ -37,9 +38,9 @@ public class TabuSearch implements TabuSearchInterface {
     public Tour initialSolution() {
         Tour tour = new Tour(graph);
         DoublyLinkedList tourLinked = new DoublyLinkedList();
-        Collection<Integer> verticesNotTaken = graph.getVertices();
+        ArrayList<Integer> verticesNotTaken = new ArrayList<Integer>(graph.getVertices());
         int current = ThreadLocalRandom.current().nextInt(1, graph.getNumberOfVertices() + 1);
-        verticesNotTaken.remove(current);
+        verticesNotTaken.remove((Integer) current); // O(n)
         tourLinked.addEnd(current);
         int bestVertex = 0;
         while (verticesNotTaken.size() > 0) {
@@ -52,7 +53,7 @@ public class TabuSearch implements TabuSearchInterface {
                 }
             }
             current = bestVertex;
-            verticesNotTaken.remove(current);
+            verticesNotTaken.remove((Integer) current); // O(n)
             tourLinked.addEnd(current);
         }
         tour.setDoubleList(tourLinked);
