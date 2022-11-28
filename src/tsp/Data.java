@@ -2,6 +2,7 @@ package tsp;
 
 import java.io.File;  // Import the File class
 import java.io.FileNotFoundException;  // Import this class to handle errors
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Data {
@@ -99,7 +100,7 @@ public class Data {
         dimension = Integer.parseInt(content.get(3).split(": ")[1]);
         edgeWeightType = content.get(4).split(": ")[1];
         if (edgeWeightType.equals("EXPLICIT")) {
-            edgeWeightFormat = content.get(5).split(": ")[1];
+            edgeWeightFormat = content.get(5).split(": ")[1].trim();
         }
     }
 
@@ -118,10 +119,11 @@ public class Data {
     }
 
     /**
-     * get the data points for the EUC_2D problem
+     * get the data points for the EUC_2D, ATT,GEO problem
      * @return dataPoints
      */
-    public HashMap<Integer, ArrayList<Double>> parseDataPoints(int start) {
+    public HashMap<Integer, ArrayList<Double>> parseDataPoints() {
+        int start = getStartIndex();
         List<String> data = content.subList(start, content.size());
         for (String i : data) {
             if (!i.equals("EOF")) {
@@ -142,12 +144,39 @@ public class Data {
         return dataPoints;
     }
 
+    /**
+     * get the data points for the matrix problems
+     * @return dataPoints
+     */
+    public ArrayList<Integer> parseDataPointsMatrix() {
+        int start = getStartIndex();
+        List<String> data = content.subList(start, content.size());
+        ArrayList<Integer> matrixElements = new ArrayList<>();
+        for (String i : data) {
+            if (!i.equals("EOF")) {
+                String[] lineSplit = i.trim().split("\\s+");
+                for (String j : lineSplit) {
+                    if (!j.trim().equals("EOF")) {
+                        matrixElements.add(Integer.valueOf(j.trim()));
+                    } else {
+                        return matrixElements;
+                    }
+                }
+            } else {
+                // we have to return or break the function, because in some files the last line after "EOF"
+                // is a blank line
+                return matrixElements;
+            }
+        }
+        return matrixElements;
+    }
+
     public int[][] parse() {
         int[][] distanceMatrix = switch (edgeWeightType) {
             case "EUC_2D" -> parseEUC2D();
             case "GEO" -> parseGEO();
             case "ATT" -> parseATT();
-            //case "EXPLICIT" -> parseMatrix();
+            case "EXPLICIT" -> parseMatrix();
             default -> null;
         };
         return distanceMatrix;
@@ -159,7 +188,7 @@ public class Data {
      */
     public int[][] parseEUC2D() {
         int[][] distanceMatrix = new int[dimension][dimension];
-        dataPoints = parseDataPoints(getStartIndex());
+        dataPoints = parseDataPoints();
         for (int i = 1; i <= dimension; i++) {
             for (int j = 1; j <= dimension; j++) {
                 double xd = dataPoints.get(i).get(0) - dataPoints.get(j).get(0);
@@ -177,7 +206,7 @@ public class Data {
      */
     public int[][] parseGEO() {
         int[][] distanceMatrix = new int[dimension][dimension];
-        dataPoints = parseDataPoints(getStartIndex());
+        dataPoints = parseDataPoints();
         for (int i = 1; i <= dimension; i++) {
             for (int j = 1; j <= dimension; j++) {
                 double[] iCoordinates = calculateCoordinates(dataPoints.get(i).get(0), dataPoints.get(i).get(1));
@@ -199,7 +228,7 @@ public class Data {
      */
     public int[][] parseATT() {
         int[][] distanceMatrix = new int[dimension][dimension];
-        dataPoints = parseDataPoints(getStartIndex());
+        dataPoints = parseDataPoints();
         for (int i = 1; i <= dimension; i++) {
             for (int j = 1; j <= dimension; j++) {
                 double xd = dataPoints.get(i).get(0) - dataPoints.get(j).get(0);
@@ -218,16 +247,87 @@ public class Data {
         return distanceMatrix;
     }
 
-    /**public int[][] parseMatrix() {
+    public int[][] parseMatrix() {
         return switch (edgeWeightFormat) {
-            case "FULL_MATRIX" -> parseFullMatrix();
-            case "UPPER_ROW", "LOWER_COL" -> parseUpperRow();
-            case "LOWER_ROW", "UPPER_COL" -> parseLowerRow();
-            case "UPPER_DIAG_ROW", "LOWER_DIAG_COL" -> parseUpperDiagRow();
             case "LOWER_DIAG_ROW", "UPPER_DIAG_COL" -> parseLowerDiagRow();
+            case "UPPER_DIAG_ROW", "LOWER_DIAG_COL" -> parseUpperDiagRow();
+            case "LOWER_ROW", "UPPER_COL" -> parseLowerRow();
+            case "UPPER_ROW", "LOWER_COL" -> parseUpperRow();
+            case "FULL_MATRIX" -> parseFullMatrix();
             default -> null;
         };
-    }**/
+    }
+
+    private int[][] parseFullMatrix() {
+        int[][] distanceMatrix = new int[dimension][dimension];
+        ArrayList<Integer> elements = parseDataPointsMatrix();
+        for (int i = 0; i < dimension; i++) {
+            for (int j = 0; j < dimension; j++) {
+                distanceMatrix[i][j] = elements.get(i * dimension + j);
+            }
+        }
+        return distanceMatrix;
+    }
+
+    private int[][] parseUpperRow() {
+        int[][] distanceMatrix = new int[dimension][dimension];
+        ArrayList<Integer> elements = parseDataPointsMatrix();
+        int counter = 0;
+        for (int i = 0; i < dimension; i++) {
+            for (int j = i + 1; j < dimension; j++) {
+                distanceMatrix[i][j] = elements.get(counter);
+                distanceMatrix[j][i] = elements.get(counter);
+                counter++;
+            }
+        }
+        return distanceMatrix;
+    }
+
+    private int[][] parseLowerRow() {
+        int[][] distanceMatrix = new int[dimension][dimension];
+        ArrayList<Integer> elements = parseDataPointsMatrix();
+        int counter = 0;
+        for (int i = 1; i < dimension; i++) {
+            for (int j = 0; j < i; j++) {
+                distanceMatrix[i][j] = elements.get(counter);
+                distanceMatrix[j][i] = elements.get(counter);
+                counter++;
+            }
+        }
+        return distanceMatrix;
+    }
+
+    private int[][] parseUpperDiagRow() {
+        int[][] distanceMatrix = new int[dimension][dimension];
+        ArrayList<Integer> elements = parseDataPointsMatrix();
+        int counter = 0;
+        for (int i = 0; i < dimension; i++) {
+            for (int j = i; j < dimension; j++) {
+                if (j != i) {
+                    distanceMatrix[i][j] = elements.get(counter);
+                    distanceMatrix[j][i] = elements.get(counter);
+                }
+                counter++;
+            }
+        }
+        return distanceMatrix;
+    }
+
+    private int[][] parseLowerDiagRow() {
+        int[][] distanceMatrix = new int[dimension][dimension];
+        ArrayList<Integer> elements = parseDataPointsMatrix();
+        int counter = 0;
+        for (int i = 0; i < dimension; i++) {
+            for (int j = 0; j < i + 1; j++) {
+                if (j != i) {
+                    distanceMatrix[i][j] = elements.get(counter);
+                    distanceMatrix[j][i] = elements.get(counter);
+                }
+                counter++;
+            }
+        }
+        return distanceMatrix;
+    }
 
     /**
      * Help function to calculate the longitude and latitude for the GEO-parser
