@@ -84,10 +84,10 @@ public class TabuSearch implements TabuSearchInterface {
         Integer RLength = Integer.MAX_VALUE;
         Tour R = null;
 
-        Pair tabu = null;
+        Pair<Integer, Integer> tabu = null;
 
         for (int i = 0; i < neighborhoodSize; i++) {
-            for (int j = 0; j < neighborhoodSize; j++) {
+            for (int j = i+1; j < neighborhoodSize; j++) {
                 if (isTabu(i,j)) {
                     continue;
                 }
@@ -97,7 +97,7 @@ public class TabuSearch implements TabuSearchInterface {
                 if (WLength < RLength) {
                     RLength = WLength;
                     R = W;
-                    tabu = new Pair(i,j);
+                    tabu = new Pair<Integer, Integer>(i,j);
                 }
             }
         }

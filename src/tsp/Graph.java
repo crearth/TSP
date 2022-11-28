@@ -54,7 +54,7 @@ public class Graph implements GraphInterface{
         Tour burmaTourACS = burma.getOtherHeuristicBestTour(10);
         System.out.println(burmaTourTS.getTourLength());
 
-        Graph berlin = new Graph("berlin52");
+        /*Graph berlin = new Graph("berlin52");
         // TS
         long start = System.nanoTime();
         Tour berlinTourTS = berlin.getTabuSearchBestTour(1000);
@@ -68,7 +68,7 @@ public class Graph implements GraphInterface{
         stop = System.nanoTime();
         time = stop - start;
         timeSeconds = (double) time / 1_000_000_000;
-        System.out.println("Ant Colony System result: " + berlinTourACS.getTourLength() + " in " + timeSeconds + " seconds");
+        System.out.println("Ant Colony System result: " + berlinTourACS.getTourLength() + " in " + timeSeconds + " seconds");*/
 
         /*Graph att = new Graph("att532");
         start = System.nanoTime();
@@ -78,7 +78,7 @@ public class Graph implements GraphInterface{
         timeSeconds = (double) time / 1_000_000_000;
         System.out.println(attTour.getTourLength() + " in " + timeSeconds + " seconds");*/
 
-        Graph eil = new Graph("eil76");
+        /*Graph eil = new Graph("eil76");
         // TS
         start = System.nanoTime();
         Tour eilTourTS = eil.getTabuSearchBestTour(1000);
@@ -92,6 +92,24 @@ public class Graph implements GraphInterface{
         stop = System.nanoTime();
         time = stop - start;
         timeSeconds = (double) time / 1_000_000_000;
-        System.out.println("Ant Colony System result: " + eilTourACS.getTourLength() + " in " + timeSeconds + " seconds");
+        System.out.println("Ant Colony System result: " + eilTourACS.getTourLength() + " in " + timeSeconds + " seconds");*/
+
+        Graph gr = new Graph("gr21");
+        // TS
+        double start = System.nanoTime();
+        Tour grTourTS = gr.getTabuSearchBestTour(1000);
+        double stop = System.nanoTime();
+        double time = stop - start;
+        double timeSeconds = (double) time / 1_000_000_000;
+        System.out.println("Tabu Search result: " + grTourTS.getTourLength() + " in " + timeSeconds + " seconds");
+
+        Graph pcb = new Graph("pcb442");
+        // ACS
+        /*double start = System.nanoTime();
+        Tour pcbTourACS = pcb.getOtherHeuristicBestTour(10);
+        double stop = System.nanoTime();
+        double time = stop - start;
+        double timeSeconds = (double) time / 1_000_000_000;
+        System.out.println("Ant Colony System result: " + pcbTourACS.getTourLength() + " in " + timeSeconds + " seconds");*/
     }
 }

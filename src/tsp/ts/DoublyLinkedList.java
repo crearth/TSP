@@ -20,8 +20,8 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
      */
     class Node{
         int item;
-        Node previous = null;
-        Node next = null;
+        Node nodeA = null;
+        Node nodeB = null;
 
         public Node(int item) {
             this.item = item;
@@ -29,7 +29,7 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
 
         @Override
         public String toString() {
-            return String.valueOf(previous.item) + " <- " + String.valueOf(item) + " -> " + String.valueOf(next.item);
+            return String.valueOf(item) + ": " + String.valueOf(nodeA.item) + " en " + String.valueOf(nodeB.item);
         }
     }
 
@@ -61,7 +61,7 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
             if (current.item == item) {
                 return current;
             } else {
-                current = current.next;
+                current = current.nodeB;
             }
         }
         return current;
@@ -80,33 +80,33 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
             head = newNode;
             tail = newNode;
             // circular doubly linked list
-            head.previous = tail;
-            tail.next = head;
+            head.nodeA = tail;
+            tail.nodeB = head;
         }
         else if (index == 0) {
-            newNode.next = head;
-            head.previous = newNode;
+            newNode.nodeB = head;
+            head.nodeA = newNode;
             head = newNode;
             // circular doubly linked list
-            head.previous = tail;
-            tail.next = head;
+            head.nodeA = tail;
+            tail.nodeB = head;
         }
         else if (index == numberOfElements) {
-            newNode.previous = tail;
-            tail.next = newNode;
+            newNode.nodeA = tail;
+            tail.nodeB = newNode;
             tail = newNode;
             // circular doubly linked list
-            tail.next = head;
-            head.previous = tail;
+            tail.nodeB = head;
+            head.nodeA = tail;
         }
         else {
             Node nodeRef = head;
             for (int i = 1; i < index; i++)
-                nodeRef = nodeRef.next;
-            newNode.next = nodeRef.next;
-            nodeRef.next = newNode;
-            newNode.previous = nodeRef;
-            newNode.next.previous = newNode;
+                nodeRef = nodeRef.nodeB;
+            newNode.nodeB = nodeRef.nodeB;
+            nodeRef.nodeB = newNode;
+            newNode.nodeA = nodeRef;
+            newNode.nodeB.nodeA = newNode;
         }
         nodeIndicesList.add(index, newNode);
         numberOfElements++;
@@ -130,23 +130,23 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
         int i = getIndexOfNode(nodeI);
         int j = getIndexOfNode(nodeJ);
         Node temp;
-        temp = nodeI.next;
-        nodeI.next = nodeJ.next;
-        nodeJ.next = temp;
+        temp = nodeI.nodeB;
+        nodeI.nodeB = nodeJ.nodeB;
+        nodeJ.nodeB = temp;
 
-        if (nodeI.next != null)
-            nodeI.next.previous = nodeI;
-        if (nodeJ.next != null)
-            nodeJ.next.previous = nodeJ;
+        if (nodeI.nodeB != null)
+            nodeI.nodeB.nodeA = nodeI;
+        if (nodeJ.nodeB != null)
+            nodeJ.nodeB.nodeA = nodeJ;
 
-        temp = nodeI.previous;
-        nodeI.previous = nodeJ.previous;
-        nodeJ.previous = temp;
+        temp = nodeI.nodeA;
+        nodeI.nodeA = nodeJ.nodeA;
+        nodeJ.nodeA = temp;
 
-        if (nodeI.previous != null)
-            nodeI.previous.next = nodeI;
-        if (nodeJ.previous != null)
-            nodeJ.previous.next = nodeJ;
+        if (nodeI.nodeA != null)
+            nodeI.nodeA.nodeB = nodeI;
+        if (nodeJ.nodeA != null)
+            nodeJ.nodeA.nodeB = nodeJ;
 
         if (nodeI == head) {
             head = nodeJ;
@@ -189,7 +189,7 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
         }
         for(int i = 0; i < numberOfElements; i++) {
             list.add(current.item);
-            current = current.next;
+            current = current.nodeB;
         }
         return list;
     }
@@ -205,7 +205,7 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
         }
         for(int i = 0; i < numberOfElements; i++) {
             System.out.print(current.item + " ");
-            current = current.next;
+            current = current.nodeB;
         }
     }
 }
