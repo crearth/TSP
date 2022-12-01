@@ -96,14 +96,21 @@ public class Graph implements GraphInterface{
 
         Graph gr = new Graph("gr21");
         // TS
-        double start = System.nanoTime();
+        /*double start = System.nanoTime();
         Tour grTourTS = gr.getTabuSearchBestTour(1000);
         double stop = System.nanoTime();
         double time = stop - start;
         double timeSeconds = (double) time / 1_000_000_000;
-        System.out.println("Tabu Search result: " + grTourTS.getTourLength() + " in " + timeSeconds + " seconds");
+        System.out.println("Tabu Search result: " + grTourTS.getTourLength() + " in " + timeSeconds + " seconds");*/
 
         Graph pcb = new Graph("pcb442");
+        // TS
+        double start = System.nanoTime();
+        Tour pcbTourTS = pcb.getTabuSearchBestTour(10);
+        double stop = System.nanoTime();
+        double time = stop - start;
+        double timeSeconds = time / 1_000_000_000;
+        System.out.println("Tabu Search result: " + pcbTourTS.getTourLength() + " in " + timeSeconds + " seconds");
         // ACS
         /*double start = System.nanoTime();
         Tour pcbTourACS = pcb.getOtherHeuristicBestTour(10);

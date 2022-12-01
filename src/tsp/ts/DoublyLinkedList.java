@@ -27,9 +27,17 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
             this.item = item;
         }
 
+        public Node getNext(Node previous) {
+        if (previous == nodeA) {
+            return nodeB;
+        } else {
+            return nodeA;
+        }
+        }
+
         @Override
         public String toString() {
-            return String.valueOf(item) + ": " + String.valueOf(nodeA.item) + " en " + String.valueOf(nodeB.item);
+            return String.valueOf(item) + " (" + String.valueOf(nodeA.item) + ", " + String.valueOf(nodeB.item) + ")";
         }
     }
 
@@ -43,6 +51,14 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
         }
     }
 
+    public Node getHead() {
+        return head;
+    }
+
+    public Node getTail() {
+        return tail;
+    }
+
     public int getItem(int index) {
         return nodeIndicesList.get(index).item;
     }
@@ -54,7 +70,6 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
     public int getIndexOfNode(Node node) {
         return nodeIndicesList.indexOf(node);
     }
-
     public Node searchItem(int item) {
         Node current = head;
         for (int i = 0; i < numberOfElements; i++) {
@@ -163,6 +178,39 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
         Collections.swap(nodeIndicesList, i, j);
     }
 
+    public void swap(Node iPrev, Node iCurrent, Node jCurrent, Node jNext) {
+        if (iCurrent == head) {
+            head = jCurrent;
+        } else if (jCurrent == head) {
+            head = iCurrent;
+        }
+        if (iCurrent == tail) {
+            tail = jCurrent;
+        } else if (jCurrent == tail) {
+            tail = iCurrent;
+        }
+        if (iPrev.nodeA == iCurrent) {
+            iPrev.nodeA = jCurrent;
+        } else {
+            iPrev.nodeB = jCurrent;
+        }
+        if (jCurrent.nodeA == jNext) {
+            jCurrent.nodeA = iPrev;
+        } else {
+            jCurrent.nodeB = iPrev;
+        }
+        if (iCurrent.nodeA == iPrev) {
+            iCurrent.nodeA = jNext;
+        } else {
+            iCurrent.nodeB = jNext;
+        }
+        if (jNext.nodeA == jCurrent) {
+            jNext.nodeA = iCurrent;
+        } else {
+            jNext.nodeB = iCurrent;
+        }
+    }
+
     public void twoOpt(int i, int j) {
         while(j >= i) {
             swap(i,j);
@@ -181,15 +229,22 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
         }
     }
 
+    /**
+     * Convert the doubly linked list to a list.
+     * @return ArrayList A list with the elements of the doubly linked list in correct order
+     */
     public ArrayList<Integer> toList() {
         ArrayList<Integer> list = new ArrayList<>();
         Node current = head;
+        Node previous = tail;
         if(head == null) {
             return list;
         }
         for(int i = 0; i < numberOfElements; i++) {
             list.add(current.item);
-            current = current.nodeB;
+            Node temp = current;
+            current = current.getNext(previous);
+            previous = temp;
         }
         return list;
     }
@@ -199,13 +254,17 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
      */
     public void print() {
         Node current = head;
+        Node previous = tail;
         if(head == null) {
             System.out.println("Doubly linked list is empty");
             return;
         }
         for(int i = 0; i < numberOfElements; i++) {
             System.out.print(current.item + " ");
-            current = current.nodeB;
+            Node temp = current;
+            current = current.getNext(previous);
+            previous = temp;
         }
+        System.out.println("");
     }
 }

@@ -4,6 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 import tsp.ts.DoublyLinkedList;
 
+import java.util.ArrayList;
+
 import static org.junit.Assert.*;
 
 public class DoublyLinkedListTest {
@@ -134,6 +136,17 @@ public class DoublyLinkedListTest {
         copy.addEnd(10);
         assertEquals(copy.getItem(5), 10);
         assertNotEquals(notEmptyList.getItem(5), 10);
+    }
+
+    @Test
+    public void testToList() {
+        ArrayList<Integer> list = new ArrayList();
+        list.add(4);
+        list.add(6);
+        list.add(7);
+        list.add(8);
+        list.add(9);
+        assertEquals(notEmptyList.toList(), list);
     }
 
 }

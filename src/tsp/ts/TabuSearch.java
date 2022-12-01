@@ -4,8 +4,10 @@ import tsp.Graph;
 import tsp.Pair;
 import tsp.Tour;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -78,42 +80,73 @@ public class TabuSearch implements TabuSearchInterface {
         return bestTour;
     }
 
-    public Tour getBestCandidate(Tour initialTour) {
+    public Tour getBestCandidate(Tour tour) {
         int neighborhoodSize = graph.getNumberOfVertices();
+        DoublyLinkedList tourList = tour.getDoubleList();
 
-        Integer RLength = Integer.MAX_VALUE;
+        int RLength = Integer.MAX_VALUE;
         Tour R = null;
 
         Pair<Integer, Integer> tabu = null;
 
+        tourList.print();
+        DoublyLinkedList.Node iPrev = tourList.getTail();
+        DoublyLinkedList.Node iCurrent = tourList.getHead();
+        DoublyLinkedList.Node temp = null;
+
         for (int i = 0; i < neighborhoodSize; i++) {
+            DoublyLinkedList.Node jCurrent = iCurrent.getNext(iPrev);
+            DoublyLinkedList.Node jNext = jCurrent.getNext(iCurrent);
             for (int j = i+1; j < neighborhoodSize; j++) {
-                if (isTabu(i,j)) {
-                    continue;
-                }
-                Tour W = new Tour(initialTour);
-                twoOpt(W.getDoubleList(), i, j);
+                temp = jCurrent;
+                System.out.println(iPrev + ", " + iCurrent + ", " + jCurrent + ", " +  jNext);
+                if (isTabu(iCurrent.item,jCurrent.item)) { continue; }
+                Tour W = new Tour(tour);
+                W.getDoubleList().swap(iPrev, iCurrent, jCurrent, jNext);
+                System.out.print("Doubly Linked List na swap: ");
+                W.getDoubleList().print();
                 int WLength = W.getTourLength();
+                //int costReduction = calculateCostReduction(R, i,j);
+                //int newCost = RLength - costReduction;
                 if (WLength < RLength) {
                     RLength = WLength;
                     R = W;
-                    tabu = new Pair<Integer, Integer>(i,j);
+                    tabu = new Pair<Integer, Integer>(iCurrent.item, jCurrent.item);
                 }
+                jCurrent = jNext;
+                jNext = jNext.getNext(temp);
             }
+            temp = iCurrent;
+            iCurrent = iCurrent.getNext(iPrev);
+            iPrev = temp;
         }
+        addTabu(tabu);
+        return R;
+    }
+
+    private int calculateCostReduction(Tour R, int i, int j) {
+        if (R == null) {
+            return 0;
+        }
+        List tour = R.getTour();
+        int iPrev = (int) tour.get(tour.indexOf((Integer) i)-1);
+        int jNext = (int) tour.get(tour.indexOf((Integer) j)+1);
+        return graph.getDistance(iPrev, j) + graph.getDistance(i, jNext) - graph.getDistance(iPrev, i) - graph.getDistance(j, jNext);
+    }
+
+    public boolean isTabu(int i,int j) {
+        Pair<Integer, Integer> pair = new Pair(i, j);
+        Pair<Integer, Integer> pairInverted = new Pair(j, i);
+        return tabuList.contains(pair) || tabuList.contains(pairInverted);
+    }
+
+    private void addTabu(Pair<Integer, Integer> tabu) {
         try {
             tabuList.add(tabu);
         } catch (IllegalStateException e) {
             tabuList.poll();
             tabuList.add(tabu);
         }
-        return R;
-    }
-
-    public boolean isTabu(int i, int j) {
-        Pair pair = new Pair(i, j);
-        Pair pairInverted = new Pair(j, i);
-        return tabuList.contains(pair) || tabuList.contains(pairInverted);
     }
 
     @Override
