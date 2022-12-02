@@ -3,13 +3,12 @@ package tsp.ts;
 import tsp.Graph;
 import tsp.Pair;
 import tsp.Tour;
+import tsp.ts.DoublyLinkedList.Node;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
+
 
 public class TabuSearch implements TabuSearchInterface {
     /**
@@ -20,6 +19,9 @@ public class TabuSearch implements TabuSearchInterface {
      * Variable keeping the tabu list.
      */
     ArrayBlockingQueue<Pair<Integer, Integer>> tabuList;
+
+    private int[][] tabuHelp;
+
     /**
      * Variable keeping the graph.
      */
@@ -29,7 +31,8 @@ public class TabuSearch implements TabuSearchInterface {
         this.maxIterations = maxIterations;
         this.graph = graph;
 
-        tabuList = new ArrayBlockingQueue<Pair<Integer, Integer>>(graph.getNumberOfVertices());
+        tabuList = new ArrayBlockingQueue<Pair<Integer, Integer>>(graph.getNumberOfVertices()/4);
+        tabuHelp = new int[graph.getNumberOfVertices()][graph.getNumberOfVertices()];
     }
 
     /**
@@ -84,35 +87,33 @@ public class TabuSearch implements TabuSearchInterface {
         int neighborhoodSize = graph.getNumberOfVertices();
         DoublyLinkedList tourList = tour.getDoubleList();
 
-        int RLength = Integer.MAX_VALUE;
+        int costReduction = Integer.MIN_VALUE;
         Tour R = null;
 
         Pair<Integer, Integer> tabu = null;
 
-        tourList.print();
-        DoublyLinkedList.Node iPrev = tourList.getTail();
-        DoublyLinkedList.Node iCurrent = tourList.getHead();
-        DoublyLinkedList.Node temp = null;
+        Node iPrev = tourList.getTail();
+        Node iCurrent = tourList.getHead();
+        Node temp = null;
+
+        Node bestIPrev = null, bestICurrent = null, bestJCurrent = null, bestJNext = null;
 
         for (int i = 0; i < neighborhoodSize; i++) {
             DoublyLinkedList.Node jCurrent = iCurrent.getNext(iPrev);
             DoublyLinkedList.Node jNext = jCurrent.getNext(iCurrent);
             for (int j = i+1; j < neighborhoodSize; j++) {
-                temp = jCurrent;
-                System.out.println(iPrev + ", " + iCurrent + ", " + jCurrent + ", " +  jNext);
-                if (isTabu(iCurrent.item,jCurrent.item)) { continue; }
-                Tour W = new Tour(tour);
-                W.getDoubleList().swap(iPrev, iCurrent, jCurrent, jNext);
-                System.out.print("Doubly Linked List na swap: ");
-                W.getDoubleList().print();
-                int WLength = W.getTourLength();
-                //int costReduction = calculateCostReduction(R, i,j);
-                //int newCost = RLength - costReduction;
-                if (WLength < RLength) {
-                    RLength = WLength;
-                    R = W;
-                    tabu = new Pair<Integer, Integer>(iCurrent.item, jCurrent.item);
+                if (!isTabu(iCurrent.item,jCurrent.item)) {
+                    int newCostReduction = calculateCostReduction(iPrev, iCurrent, jCurrent, jNext);
+                    if (newCostReduction > costReduction) {
+                        bestIPrev = iPrev;
+                        bestICurrent = iCurrent;
+                        bestJCurrent = jCurrent;
+                        bestJNext = jNext;
+                        costReduction = newCostReduction;
+                        tabu = new Pair<Integer, Integer>(iCurrent.item, jCurrent.item);
+                    }
                 }
+                temp = jCurrent;
                 jCurrent = jNext;
                 jNext = jNext.getNext(temp);
             }
@@ -120,37 +121,32 @@ public class TabuSearch implements TabuSearchInterface {
             iCurrent = iCurrent.getNext(iPrev);
             iPrev = temp;
         }
+        tourList.swap(bestIPrev, bestICurrent, bestJCurrent, bestJNext);
+        R = new Tour(graph);
+        R.setDoubleList(tourList);
         addTabu(tabu);
         return R;
     }
 
-    private int calculateCostReduction(Tour R, int i, int j) {
-        if (R == null) {
-            return 0;
-        }
-        List tour = R.getTour();
-        int iPrev = (int) tour.get(tour.indexOf((Integer) i)-1);
-        int jNext = (int) tour.get(tour.indexOf((Integer) j)+1);
-        return graph.getDistance(iPrev, j) + graph.getDistance(i, jNext) - graph.getDistance(iPrev, i) - graph.getDistance(j, jNext);
+    private int calculateCostReduction(Node iPrev, Node iCurrent, Node jCurrent, Node jNext) {
+        return graph.getDistance(iPrev.item,jCurrent.item) + graph.getDistance(iCurrent.item, jNext.item)
+                - graph.getDistance(iPrev.item, iCurrent.item) - graph.getDistance(jCurrent.item, jNext.item);
     }
 
     public boolean isTabu(int i,int j) {
-        Pair<Integer, Integer> pair = new Pair(i, j);
-        Pair<Integer, Integer> pairInverted = new Pair(j, i);
-        return tabuList.contains(pair) || tabuList.contains(pairInverted);
+        return tabuHelp[i-1][j-1] == 1 || tabuHelp[j-1][i-1] == 1;
     }
 
     private void addTabu(Pair<Integer, Integer> tabu) {
         try {
             tabuList.add(tabu);
         } catch (IllegalStateException e) {
-            tabuList.poll();
+            Pair<Integer, Integer> removedPair = tabuList.poll();
+            tabuHelp[removedPair.getA()-1][removedPair.getB()-1] = 0;
+            tabuHelp[removedPair.getB()-1][removedPair.getA()-1] = 0;
             tabuList.add(tabu);
         }
-    }
-
-    @Override
-    public void twoOpt(DoublyLinkedList tour, int i, int j) {
-        tour.twoOpt(tour.searchItem(i),tour.searchItem(j));
+        tabuHelp[tabu.getA()-1][tabu.getB()-1] = 1;
+        tabuHelp[tabu.getB()-1][tabu.getA()-1] = 1;
     }
 }

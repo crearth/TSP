@@ -59,17 +59,6 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
         return tail;
     }
 
-    public int getItem(int index) {
-        return nodeIndicesList.get(index).item;
-    }
-
-    public Node getNode(int index) {
-        return nodeIndicesList.get(index);
-    }
-
-    public int getIndexOfNode(Node node) {
-        return nodeIndicesList.indexOf(node);
-    }
     public Node searchItem(int item) {
         Node current = head;
         for (int i = 0; i < numberOfElements; i++) {
@@ -135,49 +124,6 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
         add(numberOfElements, item);
     }
 
-    public void swap(int i, int j) {
-        Node nodeI = nodeIndicesList.get(i);
-        Node nodeJ = nodeIndicesList.get(j);
-        swap(nodeI, nodeJ);
-    }
-
-    public void swap(Node nodeI, Node nodeJ) {
-        int i = getIndexOfNode(nodeI);
-        int j = getIndexOfNode(nodeJ);
-        Node temp;
-        temp = nodeI.nodeB;
-        nodeI.nodeB = nodeJ.nodeB;
-        nodeJ.nodeB = temp;
-
-        if (nodeI.nodeB != null)
-            nodeI.nodeB.nodeA = nodeI;
-        if (nodeJ.nodeB != null)
-            nodeJ.nodeB.nodeA = nodeJ;
-
-        temp = nodeI.nodeA;
-        nodeI.nodeA = nodeJ.nodeA;
-        nodeJ.nodeA = temp;
-
-        if (nodeI.nodeA != null)
-            nodeI.nodeA.nodeB = nodeI;
-        if (nodeJ.nodeA != null)
-            nodeJ.nodeA.nodeB = nodeJ;
-
-        if (nodeI == head) {
-            head = nodeJ;
-        } else if (nodeJ == head) {
-            head = nodeI;
-        }
-
-        if (nodeI == tail) {
-            tail = nodeJ;
-        } else if (nodeJ == tail) {
-            tail = nodeI;
-        }
-
-        Collections.swap(nodeIndicesList, i, j);
-    }
-
     public void swap(Node iPrev, Node iCurrent, Node jCurrent, Node jNext) {
         if (iCurrent == head) {
             head = jCurrent;
@@ -208,24 +154,6 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
             jNext.nodeA = iCurrent;
         } else {
             jNext.nodeB = iCurrent;
-        }
-    }
-
-    public void twoOpt(int i, int j) {
-        while(j >= i) {
-            swap(i,j);
-            i++;
-            j--;
-        }
-    }
-
-    public void twoOpt(Node nodeI, Node nodeJ) {
-        int i = getIndexOfNode(nodeI);
-        int j = getIndexOfNode(nodeJ);
-        while(j >= i) {
-            swap(i,j);
-            i++;
-            j--;
         }
     }
 

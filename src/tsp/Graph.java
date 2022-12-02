@@ -49,10 +49,14 @@ public class Graph implements GraphInterface{
 
     public static void main(String[] args) throws FileNotFoundException {
         Graph burma = new Graph("burma14");
-        Tour burmaTourTS = burma.getTabuSearchBestTour(1000);
-        System.out.println(burmaTourTS.getTourLength());
-        Tour burmaTourACS = burma.getOtherHeuristicBestTour(10);
-        System.out.println(burmaTourTS.getTourLength());
+        double start = System.nanoTime();
+        Tour burmaTourTS = burma.getTabuSearchBestTour(2000);
+        double stop = System.nanoTime();
+        double time = stop - start;
+        double timeSeconds = time / 1_000_000_000;
+        System.out.println("Tabu Search result: " + burmaTourTS.getTourLength() + " in " + timeSeconds + " seconds");
+        //Tour burmaTourACS = burma.getOtherHeuristicBestTour(10);
+        //System.out.println(burmaTourACS.getTourLength());
 
         /*Graph berlin = new Graph("berlin52");
         // TS
@@ -105,11 +109,11 @@ public class Graph implements GraphInterface{
 
         Graph pcb = new Graph("pcb442");
         // TS
-        double start = System.nanoTime();
-        Tour pcbTourTS = pcb.getTabuSearchBestTour(10);
-        double stop = System.nanoTime();
-        double time = stop - start;
-        double timeSeconds = time / 1_000_000_000;
+        start = System.nanoTime();
+        Tour pcbTourTS = pcb.getTabuSearchBestTour(1000);
+        stop = System.nanoTime();
+        time = stop - start;
+        timeSeconds = time / 1_000_000_000;
         System.out.println("Tabu Search result: " + pcbTourTS.getTourLength() + " in " + timeSeconds + " seconds");
         // ACS
         /*double start = System.nanoTime();
