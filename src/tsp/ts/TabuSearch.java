@@ -19,25 +19,38 @@ public class TabuSearch implements TabuSearchInterface {
      * Variable keeping the tabu list.
      */
     ArrayBlockingQueue<Pair<Integer, Integer>> tabuList;
-
+    /**
+     * Help variable keeping the tabu information of a vertex (i,j).
+     * If (i,j) is tabu, tabuHelp[i][j] = 1.
+     * If (i,j) is not tabu, tabuHelp[i][j] = 0.
+     */
     private int[][] tabuHelp;
-
     /**
      * Variable keeping the graph.
      */
     private final Graph graph;
 
+    /**
+     * Constructor for the Tabu Search class. The constructor initiates the maximum number of iterations to the given
+     * maximum number and sets the graph of the problem to the given graph.
+     * This constructor also initializes the tabu list, tabu list length and help variable tabuHelp.
+     * @param maxIterations The maximum number of iterations.
+     * @param graph The graph of the problem.
+     */
     public TabuSearch(int maxIterations, Graph graph) {
         this.maxIterations = maxIterations;
         this.graph = graph;
 
-        tabuList = new ArrayBlockingQueue<Pair<Integer, Integer>>(graph.getNumberOfVertices()/4);
+        int tabuListLength = graph.getNumberOfVertices() / 2;
+
+        tabuList = new ArrayBlockingQueue<Pair<Integer, Integer>>(tabuListLength);
         tabuHelp = new int[graph.getNumberOfVertices()][graph.getNumberOfVertices()];
     }
 
     /**
-     * The initial solution, implemented with Nearest Neighbor
-     * @return
+     * The initial (greedy) solution, implemented with Nearest Neighbour. It creates a doubly linked list and creates
+     * a new Tour object with the doubly linked list to the doubly linked list just created.
+     * @return Tour The nearest neighbour solution of the problem.
      */
     @Override
     public Tour initialSolution() {
@@ -65,10 +78,20 @@ public class TabuSearch implements TabuSearchInterface {
         return tour;
     }
 
+    /**
+     * Runs Tabu Search with a initialSolution and returns the best tour created.
+     * @return Tour The best tour created.
+     */
     public Tour getBestTour() {
         return tabuSearch(initialSolution());
     }
 
+    /**
+     * Initializes the initial solution to the best tour and then searches for a better tour with the tabu search
+     * heuristic, with a maximum number of iterations.
+     * @param initialSolution Tour The initial Tour (Nearest Neighbour).
+     * @return Tour The best found tour.
+     */
     @Override
     public Tour tabuSearch(Tour initialSolution) {
         Tour s = initialSolution;
@@ -88,7 +111,7 @@ public class TabuSearch implements TabuSearchInterface {
         DoublyLinkedList tourList = tour.getDoubleList();
 
         int costReduction = Integer.MIN_VALUE;
-        Tour R = null;
+        Tour bestCandidate = null;
 
         Pair<Integer, Integer> tabu = null;
 
@@ -122,10 +145,10 @@ public class TabuSearch implements TabuSearchInterface {
             iPrev = temp;
         }
         tourList.swap(bestIPrev, bestICurrent, bestJCurrent, bestJNext);
-        R = new Tour(graph);
-        R.setDoubleList(tourList);
+        bestCandidate = new Tour(graph);
+        bestCandidate.setDoubleList(tourList);
         addTabu(tabu);
-        return R;
+        return bestCandidate;
     }
 
     private int calculateCostReduction(Node iPrev, Node iCurrent, Node jCurrent, Node jNext) {
@@ -142,6 +165,7 @@ public class TabuSearch implements TabuSearchInterface {
             tabuList.add(tabu);
         } catch (IllegalStateException e) {
             Pair<Integer, Integer> removedPair = tabuList.poll();
+            assert removedPair != null;
             tabuHelp[removedPair.getA()-1][removedPair.getB()-1] = 0;
             tabuHelp[removedPair.getB()-1][removedPair.getA()-1] = 0;
             tabuList.add(tabu);
