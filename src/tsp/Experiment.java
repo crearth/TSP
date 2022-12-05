@@ -99,13 +99,22 @@ public class Experiment {
     }
 
     public static void main(String[] args) throws FileNotFoundException {
-        Experiment berlin = new Experiment("berlin52", 500, 50, 5);
-        berlin.runTabuSearch();
-        berlin.runAntColonySystem();
+        Experiment berlin = new Experiment("berlin52", 200, 50, 2);
+        //berlin.runTabuSearch();
+        //berlin.runAntColonySystem();
         //berlin.run();
+
         Experiment burma = new Experiment("burma14", 1000, 100,2);
         //burma.run();
-        Experiment pcb = new Experiment("pcb442", 500,50, 2);
+
+        Experiment pcb = new Experiment("pcb442", 200,50, 2);
+        //pcb.runTabuSearch();
+        //pcb.runAntColonySystem();
         //pcb.run();
+
+        Experiment gr = new Experiment("gr666", 200,50, 2);
+        gr.runTabuSearch();
+
+        Experiment pr = new Experiment("pr2392", 200, 50, 2);
     }
 }

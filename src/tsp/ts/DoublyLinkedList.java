@@ -5,28 +5,47 @@ import java.util.Collections;
 import java.util.List;
 
 public class DoublyLinkedList implements DoublyLinkedListInterface {
-    //TODO lijst bijhouden met indices en nodes, zodat zoeken naar node constant isé
-
     /**
-     * Set head and tail to null
+     * Initialize head and tail to null.
      */
     private Node head = null;
     private Node tail = null;
+    /**
+     * Initialize the number of elements of the Doubly Linked List to 0.
+     */
     private int numberOfElements = 0;
-    private ArrayList<Node> nodeIndicesList = new ArrayList<>();
 
     /**
-     * An inner class for nodes
+     * An inner class for nodes. A node has 2 child pointers and an integer.
      */
     class Node{
+        /**
+         * The actual item of the node.
+         */
         int item;
+        /**
+         * The first child.
+         */
         Node nodeA = null;
+        /**
+         * The second child/
+         */
         Node nodeB = null;
 
+        /**
+         * Constructor for the node. Sets the item of the node to the given item.
+         * @param item int The item of the node.
+         */
         public Node(int item) {
             this.item = item;
         }
 
+        /**
+         * Get the next node based on the given previous node. This is needed because the two child nodes don't have the
+         * information if it was the previous or the next node.
+         * @param previous Node The previous node.
+         * @return Node The node following this node.
+         */
         public Node getNext(Node previous) {
         if (previous == nodeA) {
             return nodeB;
@@ -34,47 +53,42 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
             return nodeA;
         }
         }
-
-        @Override
-        public String toString() {
-            return String.valueOf(item) + " (" + String.valueOf(nodeA.item) + ", " + String.valueOf(nodeB.item) + ")";
-        }
     }
 
     public DoublyLinkedList() {
 
     }
 
+    /**
+     * Translation constructor. This constructor appends every item of the list to the end of a new Doubly Linked List.
+     * @param list List The list to convert into a Doubly Linked List.
+     */
     public DoublyLinkedList(List<Integer> list) {
         for (Integer i : list) {
             addEnd(i);
         }
     }
 
+    /**
+     * Get the head of the Doubly Linked List.
+     * @return Node The head of the Doubly Linked List.
+     */
     public Node getHead() {
         return head;
     }
 
+    /**
+     * Get the tail of the Doubly Linked List.
+     * @return Node The tail of the Doubly Linked List.
+     */
     public Node getTail() {
         return tail;
     }
 
-    public Node searchItem(int item) {
-        Node current = head;
-        for (int i = 0; i < numberOfElements; i++) {
-            if (current.item == item) {
-                return current;
-            } else {
-                current = current.nodeB;
-            }
-        }
-        return current;
-    }
-
     /**
-     * Insert an item at index x of the list
-     * @param index the position in the list to add the item
-     * @param item the item
+     * Insert an item at index x of the Doubly Linked List.
+     * @param index int The position in the list to add the item.
+     * @param item int The item.
      */
     public void add(int index, int item) {
         if (index < 0 || index > numberOfElements)
@@ -112,18 +126,25 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
             newNode.nodeA = nodeRef;
             newNode.nodeB.nodeA = newNode;
         }
-        nodeIndicesList.add(index, newNode);
         numberOfElements++;
     }
 
     /**
-     * Add an item to the end of list
-     * @param item
+     * Add an item to the end of the list.
+     * @param item int The item.
      */
     public void addEnd(int item) {
         add(numberOfElements, item);
     }
 
+    /**
+     * Swap to nodes in the Doubly Linked List. This function is an element of the class DoublyLinkedList because
+     * a swap is an universal function for Doubly Linked List.
+     * @param iPrev Node The node before the node i.
+     * @param iCurrent Node The node i, the first node of the swap.
+     * @param jCurrent Node The node j, the node to swap with i.
+     * @param jNext Node The node after the node j.
+     */
     public void swap(Node iPrev, Node iCurrent, Node jCurrent, Node jNext) {
         if (iCurrent == head) {
             head = jCurrent;
@@ -175,24 +196,5 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
             previous = temp;
         }
         return list;
-    }
-
-    /**
-     * Print the items of the doubly linked list.
-     */
-    public void print() {
-        Node current = head;
-        Node previous = tail;
-        if(head == null) {
-            System.out.println("Doubly linked list is empty");
-            return;
-        }
-        for(int i = 0; i < numberOfElements; i++) {
-            System.out.print(current.item + " ");
-            Node temp = current;
-            current = current.getNext(previous);
-            previous = temp;
-        }
-        System.out.println("");
     }
 }

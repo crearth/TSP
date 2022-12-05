@@ -110,7 +110,7 @@ public class TabuSearch implements TabuSearchInterface {
         int neighborhoodSize = graph.getNumberOfVertices();
         DoublyLinkedList tourList = tour.getDoubleList();
 
-        int costReduction = Integer.MIN_VALUE;
+        int costReduction = Integer.MAX_VALUE;
         Tour bestCandidate = null;
 
         Pair<Integer, Integer> tabu = null;
@@ -127,7 +127,7 @@ public class TabuSearch implements TabuSearchInterface {
             for (int j = i+1; j < neighborhoodSize; j++) {
                 if (!isTabu(iCurrent.item,jCurrent.item)) {
                     int newCostReduction = calculateCostReduction(iPrev, iCurrent, jCurrent, jNext);
-                    if (newCostReduction > costReduction) {
+                    if (newCostReduction < costReduction) {
                         bestIPrev = iPrev;
                         bestICurrent = iCurrent;
                         bestJCurrent = jCurrent;
@@ -151,15 +151,40 @@ public class TabuSearch implements TabuSearchInterface {
         return bestCandidate;
     }
 
+    /**
+     * Calculate the cost reduction based on the pointers of 4 vertices. We simulate the cost reduction
+     * of a 2-opt swap. I.e. remove the cost of edges (i-1, i) and (j, j+1) and add the cost of edges
+     * (i-1, j) and (i,j+1). The cost of the vertices between these points do not change because of the nature
+     * of a 2-opt swap.
+     * @param iPrev Node The pointer of the previous node (i-1).
+     * @param iCurrent Node The pointer of the current node (i).
+     * @param jCurrent Node The pointer of the second current node (j).
+     * @param jNext Node The pointer of the next node of the second current node (j+1).
+     * @return int The calculated costreduction.
+     */
     private int calculateCostReduction(Node iPrev, Node iCurrent, Node jCurrent, Node jNext) {
         return graph.getDistance(iPrev.item,jCurrent.item) + graph.getDistance(iCurrent.item, jNext.item)
                 - graph.getDistance(iPrev.item, iCurrent.item) - graph.getDistance(jCurrent.item, jNext.item);
     }
 
+    /**
+     * Check if a move (i,j) is tabu or not by using the tabuHelp matrix. Position [i][j] in the matrix is
+     * 1 if move (i,j) or (j,i) is tabu, else [i][j] is 0.
+     * @param i int Vertex i.
+     * @param j int Vertex j.
+     * @return True if move (i,j) or (j, i) is tabu.
+     */
     public boolean isTabu(int i,int j) {
         return tabuHelp[i-1][j-1] == 1 || tabuHelp[j-1][i-1] == 1;
     }
 
+    /**
+     * Update the tabu list by the given Pair of vertices. First the move is added to the tabuList queue, if the
+     * queue is full, remove the first element and save it. Then add the Pair to the tabu list. The help matrix
+     * is also updated at [i][j] and [j][i]. If the queue was full, the help matrix is also updated at the
+     * indices of the removed Pair (that was saved).
+     * @param tabu Pair A pair of vertices that has to be made tabu.
+     */
     private void addTabu(Pair<Integer, Integer> tabu) {
         try {
             tabuList.add(tabu);
