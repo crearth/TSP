@@ -5,6 +5,7 @@ import tsp.Pair;
 import tsp.Tour;
 import tsp.ts.DoublyLinkedList.Node;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
@@ -188,6 +189,7 @@ public class TabuSearch implements TabuSearchInterface {
     private void addTabu(Pair<Integer, Integer> tabu) {
         try {
             tabuList.add(tabu);
+
         } catch (IllegalStateException e) {
             Pair<Integer, Integer> removedPair = tabuList.poll();
             assert removedPair != null;

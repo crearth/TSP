@@ -36,7 +36,6 @@ public class Experiment {
                 int tourLengthSum = 0;
                 double timeSum = 0;
                 for (int j = 1; j <= 20; j++) {
-                    System.out.println("Tabu Search ronde: " + j);
                     double start = System.nanoTime();
                     Tour tour = graph.getTabuSearchBestTour(i);
                     double stop = System.nanoTime();
@@ -63,7 +62,6 @@ public class Experiment {
                 int tourLengthSum = 0;
                 double timeSum = 0;
                 for (int j = 1; j <= 20; j++) {
-                    System.out.println("Ant Colony ronde: " + j);
                     double start = System.nanoTime();
                     Tour tour = graph.getOtherHeuristicBestTour(i);
                     double stop = System.nanoTime();
@@ -113,8 +111,13 @@ public class Experiment {
         //pcb.run();
 
         Experiment gr = new Experiment("gr666", 200,50, 2);
-        gr.runTabuSearch();
+        //gr.runTabuSearch();
+        gr.runAntColonySystem();
 
         Experiment pr = new Experiment("pr2392", 200, 50, 2);
+
+        Experiment u = new Experiment("u724", 200, 50, 2);
+        //u.runTabuSearch();
+        u.runAntColonySystem();
     }
 }

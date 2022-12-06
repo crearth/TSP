@@ -25,4 +25,8 @@ public class Pair<A,B> {
         return this.a.equals(pairo.getA()) &&
                 this.b.equals(pairo.getB());
     }
+
+    public String toString() {
+        return "(" + a + ", " + b + ")";
+    }
 }

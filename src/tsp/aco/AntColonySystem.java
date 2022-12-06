@@ -30,7 +30,7 @@ public class AntColonySystem {
         this.maxIterations = maxIterations;
         this.graph = graph;
         pheromoneTrail = new double[graph.getNumberOfVertices()][graph.getNumberOfVertices()];
-        numberOfAnts = 20; // 10 is optimal (book)
+        numberOfAnts = 10; // 10 is optimal (book)
         beta = 2;
         evaporationRate = 0.1;
         localEvaporationRate = 0.1;

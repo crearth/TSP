@@ -30,7 +30,7 @@ public class Ant {
         unvisitedVertices.remove((Integer) current);
         tourList.add(current);
         int bestVertex = 0;
-        double q0 = 0.9; // CONSTANT TO CHOSE OPTIMALLY //TODO place it somewhere else
+        double q0 = 0.9; // CONSTANT TO CHOSE OPTIMALLY
         double beta = system.getBeta();
         while(unvisitedVertices.size() > 0) {
             double bestPheromone = Integer.MIN_VALUE;

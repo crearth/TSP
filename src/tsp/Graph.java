@@ -50,7 +50,7 @@ public class Graph implements GraphInterface{
     public static void main(String[] args) throws FileNotFoundException {
         Graph burma = new Graph("burma14");
         double start = System.nanoTime();
-        Tour burmaTourTS = burma.getTabuSearchBestTour(2000);
+        Tour burmaTourTS = burma.getTabuSearchBestTour(1000);
         double stop = System.nanoTime();
         double time = stop - start;
         double timeSeconds = time / 1_000_000_000;
