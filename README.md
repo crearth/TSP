@@ -1,14 +1,34 @@
 # Project Gegevensstructuren en Algoritmen 2022-23
 Arthur Cremelie
 
-## Making tours with Tabu Search and Ant Colony System
-In order to use the Tabu Search algorithm or the Ant Colony System algorithm implementations, you only have to make a `Graph` object. From this object, you can call methods to get results.
+## Getting started
 
+### Getting .tsp files
 Making a Graph object requires a `.tsp` file with information about the nodes (cities) and their coordinates. Some can be found on the site of [TSPLIB from the Ruprecht-Karls-Universitat Heidelberg](http://comopt.ifi.uni-heidelberg.de/software/TSPLIB95/). There are also some `.tsp` files in the `data` folder.
+
+## Usage
+
+### Making a Graph object
+In order to use the Tabu Search algorithm or the Ant Colony System algorithm implementations, you only have to make a `Graph` object. From this object, you can call methods to get results.
 
 The constructor for a `Graph` object needs one argument: the name of the .tsp file without the '.tsp' extension. This file needs to be located in the `data` folder.
 
 An example of making a Graph object for the berlin52.tsp file:
 ```java
 Graph berlin = new Graph("berlin52");
+```
+
+### Using a Graph object
+Now that you have created a `Graph` object, you're ready to use some methods and run the algorithms. Both algorithms will return a `Tour` object. More information about the usage of a `tour` object [here](#using-a-tour-object).
+
+#### Making a tour with Tabu Search
+Just run the method `.getTabuSearchBestTour()` with one argument: the maximum amount of iterations. For example, the following code will run Tabu Search with 200 iterations on the berlin52 problem.
+```java
+Tour berlinTourTS = berlin.getTabuSearchBestTour(200);
+```
+
+#### Making a tour with Ant Colony Optimization
+Run the method `.getOtherHeuristicBestTour()` with one argument: the maximum amount of iterations. For example, the following code will run Ant Colony System with 50 iterations.
+```java
+Tour berlintTourACS = berlin.getOtherHeuristicBestTour(50);
 ```
