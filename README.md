@@ -5,6 +5,7 @@ Arthur Cremelie
 
 ### Getting .tsp files
 Making a Graph object requires a `.tsp` file with information about the nodes (cities) and their coordinates. Some can be found on the site of [TSPLIB from the Ruprecht-Karls-Universitat Heidelberg](http://comopt.ifi.uni-heidelberg.de/software/TSPLIB95/). There are also some `.tsp` files in the `data` folder.
+All the edge weight types used for the Traveling Salesman Problem are accepted. These are: "EUC_2D", "GEO", "ATT", "EXPLICIT". In the case of "EXPLICIT", the following edge weight formats are accepted: "LOWER_DIAG_ROW", "UPPER_DIAG_ROW", "LOWER_DIAG_COL", "UPPER_DIAG_COL", "LOWER_ROW", "UPPER_ROW", "LOWER_COL", "UPPER_COL", "FULL_MATRIX".
 
 ## Usage
 
