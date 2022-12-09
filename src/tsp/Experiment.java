@@ -53,15 +53,29 @@ public class Experiment {
         }
     }
 
+    public void runTabuSearchByIteration(int iterations) {
+        int tourLengthSum = 0;
+        double timeSum = 0;
+        for (int j = 1; j <= 20; j++) {
+            double start = System.nanoTime();
+            Tour tour = graph.getTabuSearchBestTour(iterations);
+            double stop = System.nanoTime();
+            double time = stop - start;
+            timeSum += time / 1_000_000_000;
+            tourLengthSum += tour.getTourLength();
+        }
+        System.out.println(problem + ", " + timeSum/20 + ", " + tourLengthSum/20);
+    }
+
     public void runAntColonySystem() {
         String filename = createFile("ACS");
         try {
             FileWriter myWriter = new FileWriter(filename);
             for (int i = 1; i <= maxIterationsACS; i += steps) {
-                System.out.println("Ant Colony iteraties: " + i);
+                System.out.println(problem + ": Ant Colony iteraties: " + i);
                 int tourLengthSum = 0;
                 double timeSum = 0;
-                for (int j = 1; j <= 20; j++) {
+                for (int j = 1; j <= 10; j++) {
                     double start = System.nanoTime();
                     Tour tour = graph.getOtherHeuristicBestTour(i);
                     double stop = System.nanoTime();
@@ -69,7 +83,7 @@ public class Experiment {
                     timeSum += time / 1_000_000_000;
                     tourLengthSum += tour.getTourLength();
                 }
-                myWriter.write(i + ", " + timeSum/20 + ", " + tourLengthSum/20);
+                myWriter.write(i + ", " + timeSum/10 + ", " + tourLengthSum/10);
                 myWriter.write(String.format("%n"));
             }
             myWriter.close();
@@ -77,6 +91,20 @@ public class Experiment {
         catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void runAntColonySystemByIteration(int iterations) {
+        int tourLengthSum = 0;
+        double timeSum = 0;
+        for (int j = 1; j <= 10; j++) {
+            double start = System.nanoTime();
+            Tour tour = graph.getOtherHeuristicBestTour(iterations);
+            double stop = System.nanoTime();
+            double time = stop - start;
+            timeSum += time / 1_000_000_000;
+            tourLengthSum += tour.getTourLength();
+        }
+        System.out.println(problem + ", " + timeSum/10 + ", " + tourLengthSum/10);
     }
 
     public String createFile(String heuristic) {
@@ -97,27 +125,23 @@ public class Experiment {
     }
 
     public static void main(String[] args) throws FileNotFoundException {
+        Experiment eil51 = new Experiment("eil51", 200, 50, 2);
+        eil51.runTabuSearchByIteration(50);
+
         Experiment berlin = new Experiment("berlin52", 200, 50, 2);
-        //berlin.runTabuSearch();
-        //berlin.runAntColonySystem();
-        //berlin.run();
+        berlin.runAntColonySystemByIteration(50);
 
-        Experiment burma = new Experiment("burma14", 1000, 100,2);
-        //burma.run();
+        Experiment kroA = new Experiment("kroA100", 200, 50, 2);
+        kroA.runAntColonySystemByIteration(50);
 
-        Experiment pcb = new Experiment("pcb442", 200,50, 2);
-        //pcb.runTabuSearch();
-        //pcb.runAntColonySystem();
-        //pcb.run();
+        Experiment eil101 = new Experiment("eil101", 200, 50, 2);
+        eil101.runAntColonySystemByIteration(50);
 
-        Experiment gr = new Experiment("gr666", 200,50, 2);
-        //gr.runTabuSearch();
-        gr.runAntColonySystem();
+        Experiment pr107 = new Experiment("pr107", 200, 50, 2);
+        pr107.runAntColonySystemByIteration(50);
 
-        Experiment pr = new Experiment("pr2392", 200, 50, 2);
+        Experiment pr124 = new Experiment("pr124", 200, 50, 2);
+        pr124.runAntColonySystemByIteration(50);
 
-        Experiment u = new Experiment("u724", 200, 50, 2);
-        //u.runTabuSearch();
-        u.runAntColonySystem();
     }
 }

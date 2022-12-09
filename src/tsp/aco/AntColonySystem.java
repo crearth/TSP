@@ -8,6 +8,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * This is a class represents the algorithm of Ant Colony System.
+ *
+ * @author Arthur Cremelie
+ */
+
 public class AntColonySystem {
     private Graph graph;
     private double[][] pheromoneTrail;

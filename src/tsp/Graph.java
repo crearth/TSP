@@ -1,21 +1,38 @@
 package tsp;
 
-import tsp.aco.Ant;
 import tsp.aco.AntColonySystem;
 import tsp.ts.TabuSearch;
 
 import java.io.FileNotFoundException;
-import java.time.Clock;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * This is a class represents a graph. It implements the class GraphInteface.
+ *
+ * @author Arthur Cremelie
+ */
+
 public class Graph implements GraphInterface{
 
+    /**
+     * Variable keeping the data of the class.
+     */
     private final Data data;
 
+    /**
+     * Constructor for the graph object. It creates a new graph object given the string of a TSP problem.
+     * @param tspProblem String The name of the TSP problem without the '.tsp' extension.
+     * @throws FileNotFoundException If the file is not found.
+     */
     public Graph(String tspProblem) throws FileNotFoundException {
         data = new Data(tspProblem);
     }
+
+    /**
+     * Get the list of vertices used in this problem.
+     * @return Collection A list of integers that represent the vertices of the problem.
+     */
     @Override
     public Collection<Integer> getVertices() {
         Collection<Integer> vertices = new ArrayList<>();
@@ -25,102 +42,45 @@ public class Graph implements GraphInterface{
         return vertices;
     }
 
+    /**
+     * Get the number of vertices. This is also known as the dimension of the problem.
+     * @return int The dimension of the problem.
+     */
     @Override
     public int getNumberOfVertices() {
         return data.getDimension();
     }
 
+    /**
+     * Get the distance between node i and j.
+     * @param i indicates a node of the graph. It should be one of the entries in the collection getVertices().
+     * @param j indicates a node of the graph. It should be one of the entries in the collection getVertices().
+     * @return the distance between node i and j.
+     */
     @Override
     public int getDistance(int i, int j) {
         return data.getDistanceMatrix()[i-1][j-1];
     }
 
+    /**
+     * Get the best tour with the Tabu Search algorithm, given an amount of iterations.
+     * @param maxNumberOfIterations indicates the maximum number of iterations your algorithm is allowed to perform.
+     * @return Tour The best tour found.
+     */
     @Override
     public Tour getTabuSearchBestTour(int maxNumberOfIterations) {
         TabuSearch tabuSearch = new TabuSearch(maxNumberOfIterations, this);
         return tabuSearch.getBestTour();
     }
 
+    /**
+     * Get the best tour with the Ant Colony System algorithm, given an amount of iterations.
+     * @param maxNumberOfIterations indicated the maximum number of iterations your algorithm is allowed to perform.
+     * @return Tour The best tour found.
+     */
     @Override
     public Tour getOtherHeuristicBestTour(int maxNumberOfIterations) {
         AntColonySystem antColonySystem = new AntColonySystem(maxNumberOfIterations, this);
         return antColonySystem.getBestTour();
-    }
-
-    public static void main(String[] args) throws FileNotFoundException {
-        Graph burma = new Graph("burma14");
-        double start = System.nanoTime();
-        Tour burmaTourTS = burma.getTabuSearchBestTour(1000);
-        double stop = System.nanoTime();
-        double time = stop - start;
-        double timeSeconds = time / 1_000_000_000;
-        System.out.println("Tabu Search result: " + burmaTourTS.getTourLength() + " in " + timeSeconds + " seconds");
-        //Tour burmaTourACS = burma.getOtherHeuristicBestTour(10);
-        //System.out.println(burmaTourACS.getTourLength());
-
-        /*Graph berlin = new Graph("berlin52");
-        // TS
-        long start = System.nanoTime();
-        Tour berlinTourTS = berlin.getTabuSearchBestTour(1000);
-        long stop = System.nanoTime();
-        long time = stop - start;
-        double timeSeconds = (double) time / 1_000_000_000;
-        System.out.println("Tabu Search result: " + berlinTourTS.getTourLength() + " in " + timeSeconds + " seconds");
-        // ACS
-        start = System.nanoTime();
-        Tour berlinTourACS = berlin.getOtherHeuristicBestTour(1000);
-        stop = System.nanoTime();
-        time = stop - start;
-        timeSeconds = (double) time / 1_000_000_000;
-        System.out.println("Ant Colony System result: " + berlinTourACS.getTourLength() + " in " + timeSeconds + " seconds");*/
-
-        /*Graph att = new Graph("att532");
-        start = System.nanoTime();
-        Tour attTour = att.getTabuSearchBestTour(100);
-        stop = System.nanoTime();
-        time = stop - start;
-        timeSeconds = (double) time / 1_000_000_000;
-        System.out.println(attTour.getTourLength() + " in " + timeSeconds + " seconds");*/
-
-        /*Graph eil = new Graph("eil76");
-        // TS
-        start = System.nanoTime();
-        Tour eilTourTS = eil.getTabuSearchBestTour(1000);
-        stop = System.nanoTime();
-        time = stop - start;
-        timeSeconds = (double) time / 1_000_000_000;
-        System.out.println("Tabu Search result: " + eilTourTS.getTourLength() + " in " + timeSeconds + " seconds");
-        // ACS
-        start = System.nanoTime();
-        Tour eilTourACS = eil.getOtherHeuristicBestTour(1000);
-        stop = System.nanoTime();
-        time = stop - start;
-        timeSeconds = (double) time / 1_000_000_000;
-        System.out.println("Ant Colony System result: " + eilTourACS.getTourLength() + " in " + timeSeconds + " seconds");*/
-
-        Graph gr = new Graph("gr21");
-        // TS
-        /*double start = System.nanoTime();
-        Tour grTourTS = gr.getTabuSearchBestTour(1000);
-        double stop = System.nanoTime();
-        double time = stop - start;
-        double timeSeconds = (double) time / 1_000_000_000;
-        System.out.println("Tabu Search result: " + grTourTS.getTourLength() + " in " + timeSeconds + " seconds");*/
-
-        Graph pcb = new Graph("pcb442");
-        // TS
-        start = System.nanoTime();
-        Tour pcbTourTS = pcb.getTabuSearchBestTour(1000);
-        stop = System.nanoTime();
-        time = stop - start;
-        timeSeconds = time / 1_000_000_000;
-        System.out.println("Tabu Search result: " + pcbTourTS.getTourLength() + " in " + timeSeconds + " seconds");
-        // ACS
-        /*double start = System.nanoTime();
-        Tour pcbTourACS = pcb.getOtherHeuristicBestTour(10);
-        double stop = System.nanoTime();
-        double time = stop - start;
-        double timeSeconds = (double) time / 1_000_000_000;
-        System.out.println("Ant Colony System result: " + pcbTourACS.getTourLength() + " in " + timeSeconds + " seconds");*/
     }
 }

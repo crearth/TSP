@@ -10,6 +10,11 @@ import java.util.ArrayList;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * This is a class represents Tabu Search.
+ *
+ * @author Arthur Cremelie
+ */
 
 public class TabuSearch implements TabuSearchInterface {
     /**
@@ -42,7 +47,7 @@ public class TabuSearch implements TabuSearchInterface {
         this.maxIterations = maxIterations;
         this.graph = graph;
 
-        int tabuListLength = graph.getNumberOfVertices() / 2;
+        int tabuListLength = (int) (graph.getNumberOfVertices()/2);
 
         tabuList = new ArrayBlockingQueue<Pair<Integer, Integer>>(tabuListLength);
         tabuHelp = new int[graph.getNumberOfVertices()][graph.getNumberOfVertices()];
@@ -107,6 +112,14 @@ public class TabuSearch implements TabuSearchInterface {
         return bestTour;
     }
 
+    /**
+     * Searching the best candidate from the neighbourhood, given a tour. This is done by calculating the effects of
+     * a 2-opt move between two nodes i and j. If the effect is better than the best effect until then, we keep the
+     * Nodes that can achieve this effect. At the end of all these checks, we perform the actual 2-opt swap and return
+     * a new tour with the swap performed.
+     * @param tour
+     * @return
+     */
     public Tour getBestCandidate(Tour tour) {
         int neighborhoodSize = graph.getNumberOfVertices();
         DoublyLinkedList tourList = tour.getDoubleList();

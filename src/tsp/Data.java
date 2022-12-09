@@ -4,6 +4,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
+/**
+ * This is a class represents the used data for graphs.
+ *
+ * @author Arthur Cremelie
+ */
+
 public class Data {
 
     /**
@@ -96,10 +102,18 @@ public class Data {
     public void readSpecification() {
         name = content.get(0).split(": ")[1];
         type = content.get(1).split(": ")[1];
-        dimension = Integer.parseInt(content.get(3).split(": ")[1]);
-        edgeWeightType = content.get(4).split(": ")[1];
-        if (edgeWeightType.equals("EXPLICIT")) {
-            edgeWeightFormat = content.get(5).split(": ")[1].trim();
+        if (content.get(2).split(": ")[0].equals("DIMENSION")) {
+            dimension = Integer.parseInt(content.get(2).split(": ")[1]);
+            edgeWeightType = content.get(3).split(": ")[1];
+            if (edgeWeightType.equals("EXPLICIT")) {
+                edgeWeightFormat = content.get(4).split(": ")[1].trim();
+            }
+        } else {
+            dimension = Integer.parseInt(content.get(3).split(": ")[1]);
+            edgeWeightType = content.get(4).split(": ")[1];
+            if (edgeWeightType.equals("EXPLICIT")) {
+                edgeWeightFormat = content.get(5).split(": ")[1].trim();
+            }
         }
     }
 

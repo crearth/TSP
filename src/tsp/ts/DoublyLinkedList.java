@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * This is a class represents a doubly linked list.
+ *
+ * @author Arthur Cremelie
+ */
+
 public class DoublyLinkedList implements DoublyLinkedListInterface {
     /**
      * Initialize head and tail to null.
