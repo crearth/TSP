@@ -196,7 +196,8 @@ public class AntColonySystem {
     }
 
     /**
-     * Calculate and set the initial pheromone value of the ant colony system.
+     * Calculate and set the initial pheromone value of the ant colony system. This is based on the
+     * cost of the nearest neighbour solution of the problem.
      */
     private void setInitialPheromoneValueACS() {
         int graphDimension = graph.getNumberOfVertices();

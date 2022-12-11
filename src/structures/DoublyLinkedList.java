@@ -47,7 +47,7 @@ public class DoublyLinkedList {
 
         /**
          * Get the next node based on the given previous node. This is needed because the two child nodes don't have the
-         * information if it was the previous or the next node.
+         * information about if it was the previous or the next node.
          * @param previous Node The previous node.
          * @return Node The node following this node.
          */
@@ -73,7 +73,7 @@ public class DoublyLinkedList {
     }
 
     /**
-     * Translation constructor. This constructor appends every item of the list to the end of a new Doubly Linked List.
+     * Transformation constructor. This constructor appends every item of the list to the end of a new Doubly Linked List.
      * @param list List The list to convert into a Doubly Linked List.
      */
     public DoublyLinkedList(List<Integer> list) {

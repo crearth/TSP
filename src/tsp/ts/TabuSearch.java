@@ -117,6 +117,10 @@ public class TabuSearch {
      * @param tour Tour The tour to check the neighbourhood for.
      * @return Tour The best tour of the neighbourhood.
      */
+    /*
+    This function is long. But most of the lines in this function are about changing the 4 pointers, thus not really
+    complicating the readability.
+     */
     public Tour getBestCandidate(Tour tour) {
         int neighborhoodSize = graph.getNumberOfVertices();
         DoublyLinkedList tourList = tour.getDoubleList();
