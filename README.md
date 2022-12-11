@@ -20,7 +20,7 @@ Graph berlin = new Graph("berlin52");
 ```
 
 ### Using a Graph object
-Now that we have created a `Graph` object, we're ready to use some methods and run the algorithms. Both algorithms will return a `Tour` object. More information about the usage of a `tour` object can be found [here](#using-a-tour-object).
+Now that we have created a `Graph` object, we're ready to use some methods and run the algorithms. Both algorithms will return a `Tour` object. More information about the usage of a `Tour` object can be found [here](#using-a-tour-object).
 
 #### Making a tour with Tabu Search
 Just run the method `.getTabuSearchBestTour()` with one argument: the maximum amount of iterations. For example, the following code will run Tabu Search with 200 iterations on the berlin52 problem.
@@ -31,11 +31,11 @@ Tour berlinTourTS = berlin.getTabuSearchBestTour(200);
 #### Making a tour with Ant Colony Optimization
 Run the method `.getOtherHeuristicBestTour()` with one argument: the maximum amount of iterations. For example, the following code will run Ant Colony System with 50 iterations on the berlin52 problem.
 ```java
-Tour berlintTourACS = berlin.getOtherHeuristicBestTour(50);
+Tour berlinTourACS = berlin.getOtherHeuristicBestTour(50);
 ```
 ### Using a Tour object
 Now that we have some `Tour` objects, we can use some methods of these objects in order to get some information of the created tour. The two most important methods are: `.getTour()` which returns the list with the cities in order and `.getTourLength()` which returns the length of the tour.
 ```java
-berlinTourTSList = berlinTourTS.getTour();
-berlinTourTSLength = berlinTourTS.getLength();
+List<Integer> berlinTourTSList = berlinTourTS.getTour();
+int berlinTourTSLength = berlinTourTS.getTourLength();
 ```
