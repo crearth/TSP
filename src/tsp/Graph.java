@@ -6,7 +6,6 @@ import tsp.ts.TabuSearch;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * This is a class represents a graph. It implements the class GraphInterface.

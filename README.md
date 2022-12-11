@@ -34,7 +34,7 @@ Run the method `.getOtherHeuristicBestTour()` with one argument: the maximum amo
 Tour berlinTourACS = berlin.getOtherHeuristicBestTour(50);
 ```
 ### Using a Tour object
-Now that we have some `Tour` objects, we can use some methods of these objects in order to get some information of the created tour. The two most important methods are: `.getTour()` which returns the list with the cities in order and `.getTourLength()` which returns the length of the tour.
+Now that we have some `Tour` objects, we can use some methods of these objects in order to get some information of the created tour. The two most important methods are: `.getTour()` which returns the list with the cities in order to be visited and `.getTourLength()` which returns the length of the tour.
 ```java
 List<Integer> berlinTourTSList = berlinTourTS.getTour();
 int berlinTourTSLength = berlinTourTS.getTourLength();
