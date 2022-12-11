@@ -3,7 +3,6 @@ package tsp.aco;
 import tsp.Graph;
 import tsp.Tour;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -16,6 +15,9 @@ public class Ant {
      * Keeping the graph of the problem.
      */
     private Graph graph;
+    /**
+     * The tour that belongs to this ant.
+     */
     private Tour antTour;
     /**
      * The list keeping the vertices that are not yet visited.
@@ -49,7 +51,7 @@ public class Ant {
         unvisitedVertices.remove((Integer) current);
         tourList.add(current);
         int bestVertex = 0;
-        double q0 = 0.9; // CONSTANT TO CHOSE OPTIMALLY
+        double q0 = 0.9;
         double beta = system.getBeta();
         while(unvisitedVertices.size() > 0) {
             double bestPheromone = Integer.MIN_VALUE;
@@ -71,7 +73,7 @@ public class Ant {
     }
 
     /**
-     * Searches the best vertex to take based on formula (1) in the paper.
+     * If q <= q0. Searches the best vertex to take based on formula (1) in the paper.
      * @return int The best vertex.
      */
     private int getBestVertexCase1(int current, int bestVertex, double beta, double bestPheromone) {
@@ -88,7 +90,7 @@ public class Ant {
     }
 
     /**
-     * Searches the best vertex to take based on formula (1) in the paper.
+     * If q > q0. Searches the best vertex to take based on formula (1) in the paper.
      * @return int The best vertex.
      */
     private int getBestVertexCase2(int current, int bestVertex, double beta, double bestPheromone) {
@@ -129,7 +131,8 @@ public class Ant {
      */
     private void localPheromoneTrailUpdate(int i, int j) {
         double initialPheromoneValue = system.getInitialPheromoneValueACS();
-        double value = (1 - system.getLocalEvaporationRate()) * system.getPheromoneValue(i, j) + system.getLocalEvaporationRate() * initialPheromoneValue;
+        double value = (1 - system.getLocalEvaporationRate()) * system.getPheromoneValue(i, j)
+                + system.getLocalEvaporationRate() * initialPheromoneValue;
         system.updatePheromoneTrail(i, j, value);
     }
 

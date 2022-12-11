@@ -1,4 +1,4 @@
-package tsp;
+package structures;
 
 /**
  * This is a class represents a pair of objects.

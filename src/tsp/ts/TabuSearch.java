@@ -1,11 +1,10 @@
 package tsp.ts;
 
-import tsp.Graph;
-import tsp.Pair;
-import tsp.Tour;
-import tsp.ts.DoublyLinkedList.Node;
+import structures.DoublyLinkedList;
+import structures.Pair;
+import tsp.*;
+import structures.DoublyLinkedList.Node;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
@@ -16,7 +15,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @author Arthur Cremelie
  */
 
-public class TabuSearch implements TabuSearchInterface {
+public class TabuSearch {
     /**
      * Variable keeping the maximum amount of iterations.
      */
@@ -58,7 +57,6 @@ public class TabuSearch implements TabuSearchInterface {
      * a new Tour object with the doubly linked list to the doubly linked list just created.
      * @return Tour The nearest neighbour solution of the problem.
      */
-    @Override
     public Tour initialSolution() {
         Tour tour = new Tour(graph);
         DoublyLinkedList tourLinked = new DoublyLinkedList();
@@ -98,7 +96,6 @@ public class TabuSearch implements TabuSearchInterface {
      * @param initialSolution Tour The initial Tour (Nearest Neighbour).
      * @return Tour The best found tour.
      */
-    @Override
     public Tour tabuSearch(Tour initialSolution) {
         Tour s = initialSolution;
         Tour bestTour = s;
@@ -114,17 +111,17 @@ public class TabuSearch implements TabuSearchInterface {
 
     /**
      * Searching the best candidate from the neighbourhood, given a tour. This is done by calculating the effects of
-     * a 2-opt move between two nodes i and j. If the effect is better than the best effect until then, we keep the
-     * Nodes that can achieve this effect. At the end of all these checks, we perform the actual 2-opt swap and return
-     * a new tour with the swap performed.
-     * @param tour
-     * @return
+     * a 2-opt move between two nodes i and j. If the improvement is better than the best improvement until then,
+     * we keep the Nodes that can achieve this improvement. At the end of all these checks, we perform the actual
+     * 2-opt swap and return a new tour with the swap performed.
+     * @param tour Tour The tour to check the neighbourhood for.
+     * @return Tour The best tour of the neighbourhood.
      */
     public Tour getBestCandidate(Tour tour) {
         int neighborhoodSize = graph.getNumberOfVertices();
         DoublyLinkedList tourList = tour.getDoubleList();
 
-        int costReduction = Integer.MAX_VALUE;
+        int improvement = Integer.MIN_VALUE;
         Tour bestCandidate = null;
 
         Pair<Integer, Integer> tabu = null;
@@ -139,15 +136,15 @@ public class TabuSearch implements TabuSearchInterface {
             DoublyLinkedList.Node jCurrent = iCurrent.getNext(iPrev);
             DoublyLinkedList.Node jNext = jCurrent.getNext(iCurrent);
             for (int j = i+1; j < neighborhoodSize; j++) {
-                if (!isTabu(iCurrent.item,jCurrent.item)) {
-                    int newCostReduction = calculateCostReduction(iPrev, iCurrent, jCurrent, jNext);
-                    if (newCostReduction < costReduction) {
+                if (!isTabu(iCurrent.getItem(),jCurrent.getItem())) {
+                    int newImprovement = calculateImprovement(iPrev, iCurrent, jCurrent, jNext);
+                    if (newImprovement > improvement) {
                         bestIPrev = iPrev;
                         bestICurrent = iCurrent;
                         bestJCurrent = jCurrent;
                         bestJNext = jNext;
-                        costReduction = newCostReduction;
-                        tabu = new Pair<Integer, Integer>(iCurrent.item, jCurrent.item);
+                        improvement = newImprovement;
+                        tabu = new Pair<Integer, Integer>(iCurrent.getItem(), jCurrent.getItem());
                     }
                 }
                 temp = jCurrent;
@@ -166,7 +163,7 @@ public class TabuSearch implements TabuSearchInterface {
     }
 
     /**
-     * Calculate the cost reduction based on the pointers of 4 vertices. We simulate the cost reduction
+     * Calculate the improvement of the cost based on the pointers of 4 vertices. We simulate the cost improvement
      * of a 2-opt swap. I.e. remove the cost of edges (i-1, i) and (j, j+1) and add the cost of edges
      * (i-1, j) and (i,j+1). The cost of the vertices between these points do not change because of the nature
      * of a 2-opt swap.
@@ -174,11 +171,11 @@ public class TabuSearch implements TabuSearchInterface {
      * @param iCurrent Node The pointer of the current node (i).
      * @param jCurrent Node The pointer of the second current node (j).
      * @param jNext Node The pointer of the next node of the second current node (j+1).
-     * @return int The calculated costreduction.
+     * @return int The calculated improvement of the cost.
      */
-    private int calculateCostReduction(Node iPrev, Node iCurrent, Node jCurrent, Node jNext) {
-        return graph.getDistance(iPrev.item,jCurrent.item) + graph.getDistance(iCurrent.item, jNext.item)
-                - graph.getDistance(iPrev.item, iCurrent.item) - graph.getDistance(jCurrent.item, jNext.item);
+    private int calculateImprovement(Node iPrev, Node iCurrent, Node jCurrent, Node jNext) {
+        return  - graph.getDistance(iPrev.getItem(),jCurrent.getItem()) - graph.getDistance(iCurrent.getItem(), jNext.getItem())
+                + graph.getDistance(iPrev.getItem(), iCurrent.getItem()) + graph.getDistance(jCurrent.getItem(), jNext.getItem());
     }
 
     /**

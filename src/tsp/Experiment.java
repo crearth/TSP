@@ -125,23 +125,22 @@ public class Experiment {
     }
 
     public static void main(String[] args) throws FileNotFoundException {
-        Experiment eil51 = new Experiment("eil51", 200, 50, 2);
-        eil51.runTabuSearchByIteration(50);
 
         Experiment berlin = new Experiment("berlin52", 200, 50, 2);
+        berlin.runTabuSearchByIteration(50);
         berlin.runAntColonySystemByIteration(50);
 
-        Experiment kroA = new Experiment("kroA100", 200, 50, 2);
-        kroA.runAntColonySystemByIteration(50);
+        Experiment tsp = new Experiment("tsp225", 200, 50, 2);
+        tsp.runAntColonySystemByIteration(50);
 
-        Experiment eil101 = new Experiment("eil101", 200, 50, 2);
-        eil101.runAntColonySystemByIteration(50);
+        Experiment pcb = new Experiment("pcb442", 200, 50, 2);
+        pcb.runAntColonySystemByIteration(50);
 
-        Experiment pr107 = new Experiment("pr107", 200, 50, 2);
-        pr107.runAntColonySystemByIteration(50);
+        Experiment gr666 = new Experiment("gr666", 200, 50, 2);
+        gr666.runAntColonySystemByIteration(50);
 
-        Experiment pr124 = new Experiment("pr124", 200, 50, 2);
-        pr124.runAntColonySystemByIteration(50);
+        Experiment u724 = new Experiment("u724", 200, 50, 2);
+        u724.runAntColonySystemByIteration(50);
 
     }
 }

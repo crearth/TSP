@@ -1,7 +1,6 @@
-package tsp.ts;
+package structures;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -10,7 +9,7 @@ import java.util.List;
  * @author Arthur Cremelie
  */
 
-public class DoublyLinkedList implements DoublyLinkedListInterface {
+public class DoublyLinkedList {
     /**
      * Initialize head and tail to null.
      */
@@ -24,7 +23,7 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
     /**
      * An inner class for nodes. A node has 2 child pointers and an integer.
      */
-    class Node{
+    public static class Node{
         /**
          * The actual item of the node.
          */
@@ -58,6 +57,14 @@ public class DoublyLinkedList implements DoublyLinkedListInterface {
         } else {
             return nodeA;
         }
+        }
+
+        /**
+         * Get the item of the node.
+         * @return int The item of the node.
+         */
+        public int getItem() {
+            return item;
         }
     }
 

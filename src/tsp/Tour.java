@@ -1,8 +1,7 @@
 package tsp;
 
-import tsp.ts.DoublyLinkedList;
+import structures.DoublyLinkedList;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
