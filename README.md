@@ -1,5 +1,5 @@
 # Project Gegevensstructuren en Algoritmen 2022-23
-Arthur Cremelie
+This was an assigment for Gegevensstructuren en Algoritmen at KU Leuven KULAK, academic year 2022-23.
 
 ## Getting started
 
